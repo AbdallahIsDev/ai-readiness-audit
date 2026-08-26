@@ -2,6 +2,8 @@
 
 > **LEDGER OVERRIDE — CLONE FIRST, NEVER RE-AUDIT. (NON-NEGOTIABLE)**
 > All audit progress lives in the GitHub repository `https://github.com/AbdallahIsDev/ai-readiness-audit-ledger`. Before ANY other work this session: `git clone https://github.com/AbdallahIsDev/ai-readiness-audit-ledger` and read `PROGRESS.md` in full. Every domain listed there was audited in a prior session — auditing it again is a critical failure. At session end you update `PROGRESS.md` per §14 and attempt to push; if the sandbox has no write credentials, that failure is handled exactly per §14.3 (package the update inside `Deliverables.zip`) — it never blocks or shortens the run.
+>
+> **PRIVACY: the ledger repo is PII-free by construction.** Only `PROGRESS.md` (dedup rows, no emails/phones/names/addresses) is ever pushed to GitHub. All client-sensitive data — emails, phones, owner names, addresses — lives ONLY in each site's local `README.md` (§11), packaged in the private zip, never committed to the ledger (§9, §14.3). Committing any site data to the ledger is a critical failure (§18).
 
 > **BROWSER TOOL OVERRIDE — BROWSER USE ONLY. (NON-NEGOTIABLE)**
 > The sandbox's built-in browser is DEPRECATED for this run. Before any website is touched, install **Browser Use** (`browser-use/browser-use`, with the self-healing `browser-use/browser-harness` recovery layer) per §2.3, register its skill, READ the registered skill documentation, and route every browser-driven action of this run through it. The built-in browser is a last-resort fallback only after the §2.3 retry procedure fails — and if that happens, the run is logged as DEGRADED MODE in `worklog.md`, never silently substituted.
@@ -307,7 +309,9 @@ Every site must clear ALL SIX. Checks 1 and 4 are deterministic/tool-driven; che
 
 Every check operates across ALL pages of the site — never the homepage alone. The auditor first discovers the full site map: navigation, sitemap.xml, footer links, and any internal links found on the homepage and all subsequent pages. Then visits every discovered page.
 
-For each page visited, all extracted data — text content, discovered links, structured data, contact info, media references, hours, prices, team info — is written to a per-page JSON file stored in the site folder's `data/` directory (§9). File naming: `<page-name>.json` (e.g. `homepage.json`, `about.json`, `services.json`, `contact.json`, `blog.json`). These JSON files are FIRST-CLASS deliverables, not raw intermediates — they are included in `Deliverables.zip` and serve as the machine-readable evidence foundation for every finding. Every finding's Description/Evidence should reference which page produced it.
+For each page visited, all extracted data — text content, discovered links, structured data, media references, hours, prices, team info — is written to a per-page JSON file stored in the site folder's `data/` directory (§9). File naming: `<page-name>.json` (e.g. `homepage.json`, `about.json`, `services.json`, `contact.json`, `blog.json`). These JSON files are FIRST-CLASS deliverables, not raw intermediates — they are included in `Deliverables.zip` and serve as the machine-readable evidence foundation for every finding. Every finding's Description/Evidence should reference which page produced it.
+
+**PRIVACY:** `data/*.json` files must NOT contain raw contact PII (emails, phone numbers, owner names, full addresses). Store those in `README.md` only (§11), which is the designated sensitive-info file. The per-page JSONs capture business data for evidence — services, prices, hours, structured-data markup, page content — but contact details belong exclusively in the README.
 
 ---
 
@@ -355,6 +359,8 @@ example-clinic-com/
 ```
 
 Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.1 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more.
+
+**PRIVACY — the ledger repo must NEVER contain client site data.** `README.md` (business dossier) is the ONLY file that carries sensitive client info — emails, phone numbers, owner names, addresses. That means: README.md and every other site artifact (audit files, Outreach, Screenshots, data/) are packaged into `Deliverables.zip` and delivered to YOU privately, but they are NEVER committed or pushed to the GitHub ledger repo. The ledger holds only `PROGRESS.md` (domains + outcomes, no PII) and this repo's own README. The ledger's `.gitignore` enforces this; you must never override it, never `git add -f` a site file, and never stage anything but `PROGRESS.md` (§14.3).
 
 ---
 
@@ -412,9 +418,11 @@ Every reference to another finding, section, or file from within a client-facing
 
 ---
 
-## 11. `README.md` — Business Dossier Spec
+## 11. `README.md` — Business Dossier Spec (DESIGNATED SENSITIVE-INFO FILE)
 
 `README.md` is a **business dossier** — a factual, scannable reference about the business itself, used by you to personalize outreach and by future sessions to remember the client. It is NOT a client-facing sales document and it is NOT the audit report. It is written in plain English, one clean section per fact.
+
+**PRIVACY ROLE:** `README.md` is the ONE and ONLY file that stores sensitive client contact info — emails, phone numbers, owner names, addresses. It is packaged into `Deliverables.zip` for your private use but is NEVER pushed to the GitHub ledger repo (§9, §14.3). Because it is the sole holder of this data, every other client-facing file (audit.md, Outreach.md, data/*.json) must NOT contain raw contact PII — they reference or describe without exposing it.
 
 **Header line exactly: `# Business Dossier — <Real Trade Name>`** (spell "Dossier" correctly — the word is D-O-S-S-I-E-R, not "Dozer").
 
@@ -491,7 +499,7 @@ Both minds run for every site, every time — empathy decides WHAT to say; sales
 ### 12.2 File format — ready to copy-paste (To: MUST be filled)
 
 ```
-To: Real Name <actual@business-email.com>   ← from README dossier — never empty, never "(see README)"
+To: [See README.md in this folder — sensitive contact info kept local]
 Subject: <see 12.3>
 
 <body — see 12.4>
@@ -499,7 +507,7 @@ Subject: <see 12.3>
 — [Your name]
 ```
 
-No attachments mentioned, no links required (link-free avoids spam filters; the report is offered, sent on reply). An email whose `To:` is empty or a placeholder is NOT ready and fails the §12.8 gate — the deliverable is only "ready to copy-paste" when the recipient is real. If no verifiable email exists on the site, that site's Outreach.md cannot be marked ready.
+The `To:` line does NOT contain the raw email/name — that sensitive data lives exclusively in `README.md` (§11), which is the designated sensitive-info file and is never pushed to GitHub (§9). The local reference `[See README.md in this folder]` is valid because the zip contains README.md right next to Outreach.md — the user opens the zip, sees the folder, and reads the contact from README.md there. No attachments mentioned, no links required (link-free avoids spam filters; the report is offered, sent on reply). An email whose `To:` is missing or empty fails the §12.8 gate. If no verifiable email exists on the site, that site's Outreach.md cannot be marked ready.
 
 ### 12.3 Subject line rules
 
@@ -540,7 +548,7 @@ Every claim traces to a CONFIRMED finding in that site's report. No invented urg
 ### 12.8 Quality gate
 
 An outreach draft ships only after the §4.6 copywriter variant + this gate pass ALL of the following:
-- `To:` is filled with a real recipient name + email from the README dossier (never empty/placeholder) — §12.2.
+- `To:` is present as the local README reference (never empty, never a fake/placeholder email; the real recipient lives in README.md per §12.2).
 - The §12.1 Owner's-Chair interrogation was actually performed and its answers recorded in the sub-worklog.
 - The real trade name is used in the subject/hook — never the raw domain as a fake brand (§12.3).
 - ≥2 unique personalization details from README facts, including at least ONE genuine technical/business detail from the audit evidence (booking platform by name, a widget, a service quirk) — not just domain/city substitutions (§12.4).
@@ -574,7 +582,7 @@ Never audit an excluded domain (§2.1). Keep candidate screening results in `wor
 
 ### 14.2 End-of-session ledger update
 
-Append one row per newly audited site to `PROGRESS.md` (website-level only, never findings detail):
+Append one row per newly audited site to `PROGRESS.md` (website-level only, never findings detail). **PRIVACY: PROGRESS.md rows carry NO client PII** — no emails, no phone numbers, no owner names, no addresses. The row is just the domain, date, industry group, outcome flags, and a neutral one-line note. All sensitive detail stays in the site's local `README.md` (§11), which is never pushed (§9).
 
 ```
 | Domain | Date | Industry Group | Client Responded | Client Purchased | Notes |
@@ -587,7 +595,7 @@ Update `Client Responded` / `Client Purchased` in LATER sessions when outcomes a
 
 ### 14.3 Push-or-package
 
-Attempt `git commit && git push` of the updated `PROGRESS.md`. If credentials are absent and push fails: save `PROGRESS_update_<date>.md` (the new rows + any outcome-column updates) at `Deliverables.zip` root, state plainly in the Final Report that the ledger needs a manual push, and include the exact rows to paste. Never claim "ledger updated" without platform-qualified evidence of WHERE the update lives (pushed to GitHub vs packaged in zip vs workspace-only).
+Attempt `git commit && git push` of the updated `PROGRESS.md`. **ONLY `PROGRESS.md` is ever committed to the ledger — never a site folder, never `README.md`, never any site artifact.** The ledger's `.gitignore` blocks everything except `PROGRESS.md` and the repo's own README (§9); never override it with `git add -f`, never stage site files. If credentials are absent and push fails: save `PROGRESS_update_<date>.md` (the new rows + any outcome-column updates) at `Deliverables.zip` root, state plainly in the Final Report that the ledger needs a manual push, and include the exact rows to paste. Never claim "ledger updated" without platform-qualified evidence of WHERE the update lives (pushed to GitHub vs packaged in zip vs workspace-only).
 
 ---
 
@@ -628,6 +636,7 @@ Deliverables.zip
 - [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
 - [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
+- [ ] Privacy check: NO client site data (README.md, audit files, screenshots, data/*.json, or raw emails/phones/names/addresses) appears in the ledger repo or in any `PROGRESS_update_…` file — only the dedup rows (§9, §14.2, §14.3)
 - [ ] Zip built with real compression — never `store` method (§15.1)
 - [ ] Zip size preferably under ~10 MB; if larger, compress harder or split — never undownloadable
 - [ ] Post-compression integrity check passed: opens, file count + structure + every markdown-referenced screenshot path intact (§15.1)
@@ -693,5 +702,6 @@ Violation of any of the following is a CRITICAL FAILURE of the run, regardless o
 - Shipping a site whose behavioral findings lack independent reproduction (sample-based review) (§7).
 - Shipping an Outreach.md with an unfilled To:, a domain-as-brand name, zero business-specific detail, the banned "Reply 'send it'" CTA, or fabricated pricing (§12).
 - Shipping any client-facing file containing internal jargon (Check N, severity labels, audit method, section references) instead of plain English (§10.3).
+- Committing or pushing ANY client site data — site folders, README.md, audit files, screenshots, data/*.json, or any raw contact PII (emails, phones, names, addresses) — to the GitHub ledger repo. Only `PROGRESS.md` may be pushed (§9, §14.3).
 - Packaging a partial site, stray files, or skipping the §15 validation checklist.
 - Stopping before the single stopping condition of §5.5, or hiding incompletion instead of reporting it (§16).
