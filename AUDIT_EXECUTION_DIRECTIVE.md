@@ -385,7 +385,8 @@ Every `Evidence:` line in the report references files that actually exist in tha
 
 Client-facing files (`_audit.md`, `_audit.pdf`, `README.md`, `Outreach.md`) are for the BUSINESS OWNER — not for you, not for the engineer who requested the audit. Apply these rules to every client-facing file:
 
-- **Banned terms** (translate to plain English or remove): "Check 1", "Check 2", "Check 3", "Check 4", "Check source", "Reproduction", "Gate-2", "needs manual verification", "downgraded", "Review Wave", "Audit Wave", "industry group G2", "orchestrator-direct", "degraded mode", "Browser Use", "§10", "§13.4", "per §7", "robots.txt", "JSON-LD", "schema.org", "llms.txt", "severity", "Critical/High/Medium/Low severity labels", "estimated annual loss", "findings shipped to client", "findings downgraded".
+- **Banned terms** (translate to plain English or remove): "Check 1", "Check 2", "Check 3", "Check 4", "Check source", "Reproduction", "Gate-2", "needs manual verification", "downgraded", "Review Wave", "Audit Wave", "industry group G2", "orchestrator-direct", "degraded mode", "Browser Use", "§10", "§13.4", "per §7", "severity", "Critical/High/Medium/Low severity labels", "estimated annual loss", "findings shipped to client", "findings downgraded".
+- **Legitimate technical terms are NOT banned** — `robots.txt`, `JSON-LD`, `schema.org`, and `llms.txt` are real findings, not internal jargon. When one is the actual subject of a finding (e.g. "robots.txt blocks AI crawlers"), name it directly — precise terminology is what makes the report credible. Ban only the internal-workflow jargon above, never the technical substance of the audit.
 - **Fail: "See Check 3 if reachable"** → succeed: embed the screenshot directly or link to `Screenshots/<filename>.png`.
 - **Fail: "Not extracted. See Check 2 robots.txt"** → succeed: state the fact in plain English ("No social media links found on the homepage" or add the actual links if found).
 - **Fail: "Audit method: orchestrator-direct (Python scripts + agent-browser CLI fallback per §2.3 degraded-mode worklog)"** → the owner does not care how you ran the audit. Remove this line entirely from the client report.
@@ -502,7 +503,7 @@ Good pattern examples (adapt, never mass-template): `Question about <Business>'s
 
 ### 12.5 Language constraints
 
-Fifth-grade reading level. BANNED vocabulary (translate to outcomes instead): schema, structured data, JSON-LD, SEO, crawl/crawler, render, llms.txt, metadata, optimization, "AI-powered solutions". Say "when someone asks ChatGPT/Siri/Google's AI about...", "your site hides its prices from them", "a rival gets picked instead."
+Fifth-grade reading level. BANNED vocabulary (translate to outcomes instead): schema, structured data, SEO, crawl/crawler, render, metadata, optimization, "AI-powered solutions". Say "when someone asks ChatGPT/Siri/Google's AI about...", "your site hides its prices from them", "a rival gets picked instead."
 
 ### 12.6 Truthfulness constraints (hard)
 
