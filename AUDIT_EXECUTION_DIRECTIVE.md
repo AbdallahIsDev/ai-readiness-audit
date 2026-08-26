@@ -73,7 +73,8 @@ A reviewer persona that rubber-stamps its team's findings, an auditor persona th
 ### 2.2 Workspace & memory setup
 
 1. Create a session working directory. All intermediate work lives there until packaging.
-2. Create `worklog.md` immediately — edited continuously after every meaningful step, never written once at the end, append-only. Required sections:
+2. **PRIVACY: the session working directory must be COMPLETELY OUTSIDE the ledger repo clone.** Never create site folders, draft files, or any site artifact inside the cloned ledger directory — the ledger's `.gitignore` blocks accidental commits, but the safest approach is to keep the entire workspace hierarchy separate from the ledger. Clone the ledger, then work in a sibling directory (e.g. `../audit-session-N/`).
+3. Create `worklog.md` immediately — edited continuously after every meaningful step, never written once at the end, append-only. Required sections:
    `Session Goal (Controls used) | Exclusion Set Loaded (Y/N, row count) | Browser Mode | Candidate Pool & Screening Log | Coverage Matrix (§6.6) | Task Plan | Wave Log (one entry per wave: number, type, roster, units claimed/completed, outcome) | Review Wave Findings (tagged by wave) | Completed Sites | Incomplete Sites | Downgraded Findings ("needs manual verification") | Free Tool Failures | Failed Attempts | Important Discoveries | Self-Directed Improvements | Ledger Sync Result`
 3. After every significant append, surface a one-line version in chat too — if the workspace dies mid-session, the chat transcript reconstructs `worklog.md`.
 
@@ -637,6 +638,7 @@ Deliverables.zip
 - [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
 - [ ] Privacy check: NO client site data (README.md, audit files, screenshots, data/*.json, or raw emails/phones/names/addresses) appears in the ledger repo or in any `PROGRESS_update_…` file — only the dedup rows (§9, §14.2, §14.3)
+- [ ] PII scan: for every site folder about to ship, scan all files EXCEPT `README.md` for email/phone patterns — any raw client email or phone found outside README.md is a privacy violation; fix before shipping (§11)
 - [ ] Zip built with real compression — never `store` method (§15.1)
 - [ ] Zip size preferably under ~10 MB; if larger, compress harder or split — never undownloadable
 - [ ] Post-compression integrity check passed: opens, file count + structure + every markdown-referenced screenshot path intact (§15.1)
