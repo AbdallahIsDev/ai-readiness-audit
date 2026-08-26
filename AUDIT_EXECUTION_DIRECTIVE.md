@@ -1,7 +1,7 @@
 # AI-Agent Readiness Audit — Execution Directive v2 (Ultra)
 
 > **LEDGER OVERRIDE — CLONE FIRST, NEVER RE-AUDIT. (NON-NEGOTIABLE)**
-> All audit progress lives in the GitHub repository `https://github.com/AbdallahIsDev/ai-readiness-audit-ledger`. Before ANY other work this session: `git clone https://github.com/AbdallahIsDev/ai-readiness-audit-ledger` and read `PROGRESS.md` in full. Every domain listed there was audited in a prior session — auditing it again is a critical failure. At session end you update `PROGRESS.md` per §15 and attempt to push; if the sandbox has no write credentials, that failure is handled exactly per §15.3 (package the update inside `Deliverables.zip`) — it never blocks or shortens the run.
+> All audit progress lives in the GitHub repository `https://github.com/AbdallahIsDev/ai-readiness-audit-ledger`. Before ANY other work this session: `git clone https://github.com/AbdallahIsDev/ai-readiness-audit-ledger` and read `PROGRESS.md` in full. Every domain listed there was audited in a prior session — auditing it again is a critical failure. At session end you update `PROGRESS.md` per §14 and attempt to push; if the sandbox has no write credentials, that failure is handled exactly per §14.3 (package the update inside `Deliverables.zip`) — it never blocks or shortens the run.
 
 > **BROWSER TOOL OVERRIDE — BROWSER USE ONLY. (NON-NEGOTIABLE)**
 > The sandbox's built-in browser is DEPRECATED for this run. Before any website is touched, install **Browser Use** (`browser-use/browser-use`, with the self-healing `browser-use/browser-harness` recovery layer) per §2.3, register its skill, READ the registered skill documentation, and route every browser-driven action of this run through it. The built-in browser is a last-resort fallback only after the §2.3 retry procedure fails — and if that happens, the run is logged as DEGRADED MODE in `worklog.md`, never silently substituted.
@@ -11,6 +11,9 @@
 
 > **EVIDENCE GATE — NOTHING SHIPS UNVERIFIED. (NON-NON-NEGOTIABLE)**
 > No finding reaches a client-facing file unless it clears BOTH conditions in §8: (1) material proof captured at the moment of discovery (screenshot + raw content + timestamp), and (2) for behavioral findings, independent reproduction by a Review-Wave sub-agent who re-runs the check from scratch. A finding clearing only one gate is downgraded to "needs manual verification" and EXCLUDED from every client deliverable. One disprovable finding in a paying client's report is the exact "AI flop" outcome this entire workflow exists to prevent. When in doubt: leave it out, log it.
+
+> **FINDING INTEGRITY OVERRIDE — NO FABRICATED NUMBERS, NO FILLER, NO FAKE FILES. (NON-NEGOTIABLE)**
+> Every number, title, evidence reference, and solution in a client-facing file must be real, complete, and internally consistent. Concretely: the annual-loss estimate is a SINGLE number from a defined formula (§10.3) — per-finding dollar guesses that don't add up are FORBIDDEN; every Evidence reference points to a file that physically exists in that site's folder (§10.2); finding titles are complete, never truncated with "..." (§10.1); each Solution addresses the SAME topic as its Description (§10.1); an observed strength is labeled a Strength, never shipped as a defect (§10.1); duplicate findings (same root cause from multiple checks) are merged into one (§4.6); and PROGRESS.md counts match the actual audit.md findings (§14.2). Break any of these and that finding/file is discarded or rewritten — it does not ship.
 
 > **FREE TOOLS ARE SECONDARY, NEVER PRIMARY. (NON-NEGOTIABLE)**
 > Every check must first be executable natively by the cloud agent and its sub-agents. Free third-party checker tools are run IN ADDITION as a cross-check layer (§9) — they may catch what the native audit missed; they may never replace, block, slow, or define completeness for the native audit. Rate limits, paywalls, and auth walls mid-run are EXPECTED — log once, ignore, continue. Never create accounts, never provide identity or payment details — the sandbox has none and must not fabricate any.
@@ -31,11 +34,12 @@ controls:
   SUB_AGENT_REVIEW_POOL_SIZE: 6   # concurrent sub-agents during any Review Wave
   NUMBER_OF_WAVES: 10             # alternating Audit/Review waves. MUST be even; if odd, round down, state the adjustment in worklog.md — the run must always END on a Review Wave.
   TARGET_GROUP: 0                 # industry group selector — see §4.1. 0 = draw from ALL groups.
-  MIN_ANNUAL_LOSS_ESTIMATE_USD: 1000   # loss-estimate floor quoted to clients — small enough to be believable to a plumber (§4.2 Q4, §13)
+  MIN_ANNUAL_LOSS_ESTIMATE_USD: 1000   # loss-estimate floor quoted to clients — small enough to be believable to a plumber (§4.2 Q4, §12.4)
   MAX_ANNUAL_LOSS_ESTIMATE_USD: 2000   # ceiling — keeps the number "small but real," never inflated hype
-  FIXED_AUDIT_FEE_USD: 500        # tier-1 price anchor used verbatim in outreach offers (§13.4)
+  FIXED_AUDIT_FEE_USD: 500        # tier-1 price anchor used verbatim in outreach offers (§12.4)
   FREE_TOOL_MODE: SECONDARY_ONLY  # FIXED — see override banner above. Not a toggle.
   BROWSER_ENGINE: BROWSER_USE     # FIXED unless §2.3's degraded-mode path triggers.
+  REVIEW_COVERAGE_PCT: 100        # FIXED — every shipped site's behavioral findings must be independently reproduced before packaging. Sample-based review (e.g. "5 of 20") is prohibited.
   LEDGER_REPO_URL: https://github.com/AbdallahIsDev/ai-readiness-audit-ledger
 ```
 
@@ -96,7 +100,7 @@ Using your native task-tracking tool, build the to-do list covering the ENTIRE s
 5. One item per wave: `Wave N — Audit Wave: clear next check-units from queue` / `Wave N — Review Wave: verify prior wave's units`, up to NUMBER_OF_WAVES
 6. After EVERY Audit Wave: update coverage matrix; confirm no idle capacity while units remain (§5.2)
 7. Assemble `_audit.md` + `_audit.pdf` per completed site (§11); generate README.md + Outreach.md per site (§12, §13)
-8. EVIDENCE GATE SWEEP — every shipped finding has proof + reproduction status recorded (§8)
+8. EVIDENCE GATE SWEEP + FINDING INTEGRITY SWEEP — every shipped finding has proof + reproduction status recorded (§8); no truncated titles, no topic-mismatched solutions, no duplicate findings, no per-finding dollar figures, no evidence references to nonexistent files (§10)
 9. Update PROGRESS.md rows; attempt ledger push or package fallback (§15)
 10. Build Deliverables.zip + run the packaging validation checklist (§16)
 11. Write Final Report (§18)
@@ -199,6 +203,7 @@ Multiple sub-agents touch the same website across a wave — so file ownership i
 - Check-unit 5 (evidence compilation) READS raw check files, writes `check5_evidence_report.md`.
 - Check-unit 6 writes `README.md` and drafts `Outreach.md`.
 - FINAL assembly of `_audit.md` + `_audit.pdf` happens AFTER review confirmation — orchestrated by you (or a dedicated assembler sub-agent dispatched alone), merging only REVIEW-CONFIRMED findings (§8). One writer per file, always.
+- Raw intermediates (`check<N>_*.md`, `check<N>_raw.json`, snapshots, `check5_evidence_report.md`, `review_overlay.md`) are STRICTLY workspace-side working files. They are NEVER referenced inside a client-facing `_audit.md` and NEVER packaged. A client report references only files that physically exist in that site's folder (§10.2). Do not include a "Files in this site folder" inventory in the client report at all — it is how nonexistent files leak into print. If an inventory is ever needed for your own tracking, keep it in `worklog.md`.
 
 ### 4.4 Sub-agent memory — `sub-worklog-<N>.md`
 
@@ -221,7 +226,7 @@ EMBEDDED RULES (verbatim, binding):
 <paste: relevant banner(s) — evidence gate / free-tools-secondary / scope /
 resource discipline — PLUS the wave-specific rules block §7.x or §6-review>
 
-MANDATORY QUALITY LOOP (self-checklist per §5.6) runs on every unit
+MANDATORY QUALITY LOOP (self-checklist per §4.6) runs on every unit
 before you return it.
 
 WHEN DONE, return EXACTLY the format specified for your wave type,
@@ -232,15 +237,26 @@ If a directive must be followed by the agent doing the work, it MUST appear insi
 
 ### 4.6 Mandatory Quality Loop — every sub-agent, every unit, before returning
 
-Nothing is "done" because a command didn't error.
+Nothing is "done" because a command didn't error. The loop runs on EVERY unit, every wave, every variant:
 
-**Auditor variant:** Act → capture evidence AT the moment of observation → re-inspect raw result (does the screenshot actually show the claim? does the fetched content match?) → check against own checklist (all six-check requirements met? timestamps present? naming correct?) → self-adversarial pass: "what would a Red Team reviewer say is weak here?" → fix weaknesses NOW → then mark done.
+1. **Act** — execute the check or draft the artifact.
+2. **Capture evidence at the moment of observation** (screenshot + raw content + timestamp) — never reconstructed later.
+3. **Re-inspect the raw result** — does the screenshot actually show the claim? Does the fetched content match the finding?
+4. **Run the Integrity Self-Check** (all of these, every time):
+   - **Title complete** — no literal `...` truncation anywhere in a finding title.
+   - **Topic match** — the Solution addresses the SAME topic as the Description. A booking-flow finding never gets an HTTPS/SSL solution; a security-header finding gets that header's fix.
+   - **Impact is per-topic** — the impact statement names the real consequence of THIS finding type. The boilerplate "prevents AI assistants from surfacing your business… funneling that booking to a competitor" is banned as a copy-paste, especially on findings (e.g. missing security headers) where that is not the actual mechanism.
+   - **Strength vs defect** — something that demonstrably works (reachable booking form, readable pricing, correct structured data) is labeled a Strength, or — if kept as a finding — its Solution PRESERVES the working behavior. It is never shipped as a defect whose solution demands it be "added."
+   - **No duplicates** — the same root cause (e.g. missing hours, missing pricing) discovered by more than one check is ONE finding that records every corroborating check; it is never shipped as two findings.
+   - **Evidence references are real** — every `Evidence:` line points to a file that exists in that site's folder.
+5. **Self-adversarial pass** — "what would a Red Team reviewer flag here?" Fix weaknesses NOW.
+6. Only then mark done and hand off. A sub-agent that skips its loop hands off measurably worse work — the loop is mandatory, not advisory.
 
-**Reviewer variant:** Pull unit → IGNORE the auditor's conclusions initially → re-execute the check from scratch → compare results → classify: CONFIRMED / CORRECTED (state the truth) / INCONSISTENT (→ downgraded to "needs manual verification", §8) / DISCARDED (no factual basis) → write the verdict with YOUR OWN fresh evidence attached.
+**Variant-specific requirements (in addition to the loop above):**
 
-**Copywriter variant (unit 6):** Become THIS owner first — run the §12.1 Owner's-Chair interrogation, record the answers in the sub-worklog → draft with the Salesman pass → jargon scan (§13.5 banned-word list) → specificity check (≥2 unique details from README facts) → length check → truthfulness check (every claim traceable to a confirmed finding) → Owner's-Chair final gut test: "would I reply to this from that chair?" → then done.
-
-A sub-agent that skips its loop hands off measurably worse work — the loop is mandatory, not advisory.
+- **Auditor variant (checks 1–4):** execute the assigned unit fully — capture evidence at the moment of observation, record the exact raw observation, write the finding with its real evidence references. Never write a finding for content you did not personally observe this unit.
+- **Reviewer variant (Review Waves):** pull a completed unit, IGNORE the auditor's conclusions initially, re-execute the check from scratch, compare results, and classify each finding CONFIRMED / CORRECTED (state the truth) / INCONSISTENT (→ downgraded to "needs manual verification", §8) / DISCARDED (no factual basis) — attaching YOUR OWN fresh evidence for every verdict. Reading the auditor's writeup and agreeing is not review.
+- **Copywriter variant (unit 6):** follow the §12 dual-mind protocol (Owner's-Chair then Salesman), draft `Outreach.md`, then run every §12.7 gate item, and hand off only a copy-paste-ready email.
 
 ---
 
@@ -270,7 +286,7 @@ When a wave calls for N sub-agents, ALL N launches go in ONE message, simultaneo
 
 ### 5.6 Coverage matrix (live tracking)
 
-Maintain in `worklog.md` a table: rows = selected sites, columns = Check 1..6 + Review status + Assembly status + Packaged. Updated after every wave. At any moment it answers: which units exist, which are reviewed, which site is closest to shipping. It is the instrument that makes §5.3 enforceable instead of aspirational.
+Maintain in `worklog.md` a table: rows = selected sites, columns = Check 1..6 + Review status + Assembly status + Packaged. Updated after every wave. Add a **Review coverage %** running count — it must reach 100% of all sites before ANY site is packaged (§7). At any moment it answers: which units exist, which are reviewed, which site is closest to shipping. It is the instrument that makes §5.3 enforceable instead of aspirational.
 
 ---
 
@@ -296,6 +312,8 @@ Every site must clear ALL SIX. Checks 1 and 4 are deterministic/tool-driven; che
 Deterministic findings (check 1) don't need re-execution — a robots.txt rule either exists or doesn't — but reviewers still independently open the same source; trusting the auditor's transcription is not verification.
 
 **Credibility bonus, used honestly:** when a native finding agrees with a known free-tool result, the report may state "also confirmed by [tool]" (§9). This raises client trust without making the free tool the author.
+
+**Review coverage is 100%, never sample-based.** Every shipped site's behavioral findings must be independently reproduced before that site is packaged. "Sample-only review coverage 5/20" is prohibited: a site with any un-reproduced behavioral finding is not shippable — either the Review Wave reaches it, or the finding goes to `needs manual verification` and is excluded from client deliverables. Degraded browser mode does NOT relax this gate.
 
 ---
 
@@ -351,6 +369,23 @@ PDF generation: render from the `.md` (pandoc → weasyprint → wkhtmltopdf →
 
 Consistency IS the product: a client comparing two reports must find the same structure, same subsection order, solution-last discipline everywhere.
 
+### 10.1 Title, impact & solution integrity
+
+- Finding titles are complete and descriptive — NEVER truncated with literal "..." (e.g. no "…te" endings). A truncated title is a discarded finding — redo.
+- **Solution topic must match Description topic.** A booking-flow finding gets a booking-flow solution; a security-header finding gets that header's fix. Copy-pasted solutions from another finding type are a critical error.
+- **Impact is per-topic and honest.** State the real consequence of THIS finding type. The boilerplate "prevents AI assistants from surfacing your business… funneling that booking to a competitor" is banned as a copy-paste — especially on findings (like missing security headers) where that claim is not the actual mechanism.
+- **Strengths are strengths.** Something that demonstrably works (reachable booking form, correct structured data, readable pricing) is reported as a Strength — or, if retained in the findings list, its Solution PRESERVES the working behavior rather than demanding it be added.
+
+### 10.2 Evidence references must be real
+
+Every `Evidence:` line in the report references files that actually exist in that site's folder. Screenshots must be present under `Screenshots/`; any raw-capture file referenced must also be shipped in the same folder. A reference to a file that doesn't exist invalidates the finding's evidence — that finding does not ship. The client report must NOT contain a "Files in this site folder" inventory section (§4.3); all evidence references are inline per finding only.
+
+### 10.3 Loss estimate — one number, derived, reconciled
+
+The annual-loss estimate is a SINGLE figure in the Executive Summary, produced by a fixed deterministic formula and nothing else: sum the confirmed findings' severity weights (Critical=5, High=3, Medium=2, Low=1) → multiply by 25 → clamp into [`MIN_ANNUAL_LOSS_ESTIMATE_USD`, `MAX_ANNUAL_LOSS_ESTIMATE_USD`]. The Executive Summary states: "Estimated annual loss from AI-agent invisibility: $X (severity-weighted, clamped to the [$MIN–$MAX] credibility band)."
+
+Per-finding dollar contributions ("Estimated contribution to annual loss: $50") are FORBIDDEN — they are what produced internally inconsistent totals in prior sessions. One number, computed once, reconciled to itself. Nothing to add up.
+
 ---
 
 ## 11. `README.md` — Business Dossier Spec
@@ -367,6 +402,15 @@ Plain English, scannable, everything needed to remember WHO this client is and t
 - Source URL for every fact
 
 This feeds §12's outreach and future sessions' memory of the client.
+
+### 11.1 Dossier field discipline
+
+- **Business name is the real trade name** (from homepage/logo/About/header), not the raw domain. It is used verbatim in `Outreach.md` subject lines and hooks.
+- **Every extracted field matches its label** — Hours holds hours, Location holds a real address (never "(see homepage…)" when the address is already in the captured text), Price points hold prices, Contacts hold well-formed emails.
+- **Emails are validated before writing.** Each extracted email must pass a sanity check: no stray leading/trailing characters (e.g. a spurious leading "n"), well-formed `local@domain.tld`, and cross-checked against visible contact text on the site. A corrupted email is fixed or marked unverified — never shipped corrupted.
+- **Source URLs point to real paths** relative to the workspace root; no invented `sites/` prefix.
+- **Snapshot is one concise sentence.** The business snapshot is a single sentence summarizing what they do; raw homepage text, if kept, lives in a separate labeled field (e.g. "Raw description from homepage: ..."), never as the snapshot itself.
+- **Grammar:** no article errors ("a independent" → "an independent"), no subject-verb mismatches, no orphaned fragments.
 
 ---
 
@@ -390,10 +434,10 @@ Both minds run for every site, every time — empathy decides WHAT to say; sales
 
 **Baseline reader reality (both minds must respect it):** a non-technical local business owner reads email on a phone, in seconds, between customers; distrusts anything that smells like tech jargon or a scam; cares about three things — customers, money, reputation. They've heard "AI" in the news and don't know what it means for them. The email wins by being CONCRETE about THEIR site, SMALL-numbered, and EFFORTLESS to answer. Their competitor getting recommended by AI assistants while they're invisible is the fear — stated factually, never hysterically.
 
-### 12.2 File format — ready to copy-paste
+### 12.2 File format — ready to copy-paste (To: MUST be filled)
 
 ```
-To: <actual business contact email from README.md>
+To: Real Name <actual@business-email.com>   ← from README dossier — never empty, never "(see README)"
 Subject: <see 12.3>
 
 <body — see 12.4>
@@ -401,17 +445,17 @@ Subject: <see 12.3>
 — [Your name]
 ```
 
-No attachments mentioned, no links required (link-free avoids spam filters; the report is offered, sent on reply).
+No attachments mentioned, no links required (link-free avoids spam filters; the report is offered, sent on reply). An email whose `To:` is empty or a placeholder is NOT ready and fails the §12.7 gate — the deliverable is only "ready to copy-paste" when the recipient is real. If no verifiable email exists on the site, that site's Outreach.md cannot be marked ready.
 
 ### 12.3 Subject line rules
 
-≤55 characters. Contains the business name OR one concrete observed detail. Creates a curiosity gap; banned: ALL CAPS words, multiple exclamation marks, "FREE", "boost your business", "don't miss out", anything generic enough to describe any business. The subject's ONLY job: earn the open from a skeptical owner.
+≤55 characters. Contains the business name OR one concrete observed detail. The business reference is the REAL trade name from the README dossier (e.g. "G & G Law, LLC"), never the raw domain without branding ("Gglawoffices"). Creates a curiosity gap; banned: ALL CAPS words, multiple exclamation marks, "FREE", "boost your business", "don't miss out", anything generic enough to describe any business. The subject's ONLY job: earn the open from a skeptical owner.
 
 Good pattern examples (adapt, never mass-template): `Question about <Business>'s online booking`, `<Business>: found something on your homepage`, `Can ChatGPT find <Business>? I checked.`
 
 ### 12.4 Body structure (≤150 words total)
 
-1. **Hook (1–2 sentences):** one SPECIFIC verified finding on THEIR site, described in human terms. "When someone asks ChatGPT for a <trade> in <city>, your site never comes up — I checked why." Not "your website has issues."
+1. **Hook (1–2 sentences):** one SPECIFIC verified finding on THEIR site, described in human terms. The hook must reference at least one REAL business-specific detail verified in the audit — the actual booking platform by name (e.g. "your Modento booking page"), a specific service, a widget, a genuine quirk — never a pure domain/city/$ substitution. "When someone asks ChatGPT for a <trade> in <city>, your site never comes up — I checked why." Not "your website has issues."
 2. **Bridge (1–2 sentences):** why now — people increasingly ask AI assistants instead of searching, and assistants recommend businesses they can read.
 3. **Number (1 sentence):** a modest, believable estimate within `MIN–MAX_ANNUAL_LOSS_ESTIMATE_USD` of bookings/customers this quietly costs. Small-but-real, never "thousands lost monthly!!"
 4. **Offer (2 sentences):** two tiers, plainly: a full audit report of everything found, fixed-price `$FIXED_AUDIT_FEE_USD`; or done-for-you fixing, quoted after the audit. No pricing gymnastics, no fake discounts.
@@ -427,7 +471,16 @@ Every claim traces to a CONFIRMED finding in that site's report. Numbers stay in
 
 ### 12.7 Quality gate
 
-An outreach draft ships only after the §5.6 copywriter variant passes: the §12.1 Owner's-Chair interrogation was actually performed and its answers recorded in the sub-worklog; ≥2 unique personalization details from README facts; zero banned words; ≤150 words; every factual claim traceable to a confirmed finding; and the final draft answers YES to "would I, sitting in this owner's chair, reply to this?" A draft that only passes the Salesman pass but fails the Owner's-Chair test = redo. Generic-feeling output = redo.
+An outreach draft ships only after the §4.6 copywriter variant + this gate pass ALL of the following:
+- `To:` is filled with a real recipient name + email from the README dossier (never empty/placeholder) — §12.2.
+- The §12.1 Owner's-Chair interrogation was actually performed and its answers recorded in the sub-worklog.
+- The real trade name is used in the subject/hook — never the raw domain as a fake brand (§12.3).
+- ≥2 unique personalization details from README facts, including at least ONE genuine technical/business detail from the audit evidence (booking platform by name, a widget, a service quirk) — not just domain/city/$ substitutions (§12.4).
+- Zero banned words; ≤150 words; correct grammar (no "a independent" errors); single CTA.
+- Every factual claim is traceable to a confirmed finding (§12.6).
+- Final gut test answers YES to "would I, sitting in this owner's chair, reply to this?"
+
+A draft failing any of the above = redo. A draft that only passes the Salesman pass but fails the Owner's-Chair test = redo. Generic-feeling output = redo.
 
 ---
 
@@ -457,6 +510,8 @@ Append one row per newly audited site to `PROGRESS.md` (website-level only, neve
 ```
 
 Update `Client Responded` / `Client Purchased` in LATER sessions when outcomes are actually known — values are `pending` until reality reports in. Outcomes are NEVER guessed, fabricated, or marked optimistically.
+
+**Count reconciliation (mandatory):** the `Notes` finding count must EQUAL the actual shipped-finding count in that site's `_audit.md`. Read the audit.md, count its shipped findings, write that number — never guess, never estimate from memory. A PROGRESS.md row whose count contradicts its own report is a critical error (§18).
 
 ### 14.3 Push-or-package
 
@@ -503,6 +558,10 @@ Deliverables.zip
 - [ ] Zip built with real compression — never `store` method (§15.1)
 - [ ] Zip size preferably under ~10 MB; if larger, compress harder or split — never undownloadable
 - [ ] Post-compression integrity check passed: opens, file count + structure + every markdown-referenced screenshot path intact (§15.1)
+- [ ] PROGRESS.md Notes counts match each site's actual shipped-finding count (§14.2)
+- [ ] No finding references a file that doesn't exist; no false "Files in this site folder" inventory (§10.2)
+- [ ] Finding-integrity spot check (3 random reports): titles not truncated, Solution topic matches Description, no duplicate findings, no per-finding dollar figures, impact is per-topic (§10.1/§10.3)
+- [ ] Outreach spot check (3 random): To: filled, real trade name used, ≥1 technical business-specific detail (§12.7)
 
 ---
 
@@ -517,6 +576,9 @@ The session is DONE only when ALL of the following hold — evaluated once, hone
 5. `Deliverables.zip` built and passed the §15 checklist.
 6. Ledger synced per §14.3 with truthful status.
 7. `worklog.md` reflects the real run — including failures, degraded modes, downgraded findings, and skipped candidates.
+8. Review coverage is 100% — every shipped site's behavioral findings were independently reproduced; no sample-based review (§7).
+9. Finding-integrity sweep passed: no truncated titles, no topic-mismatched solutions, no duplicate findings, no per-finding dollar figures, no evidence references to nonexistent files (§10.1–§10.3).
+10. PROGRESS.md counts reconciled against actual audit.md findings (§14.2).
 
 If wave budget ran out before clearing the queue, that is stated PLAINLY in the Final Report as current state — which sites completed, which didn't and why, and the concrete recommendation (bigger pools / more waves / fewer sites) for next session. Honest incompletion is acceptable; hidden incompletion and trimmed audits are critical failures.
 
@@ -551,5 +613,9 @@ Violation of any of the following is a CRITICAL FAILURE of the run, regardless o
 - Enterprise targets entering the audit queue (§3 banners, §3.2 Q2).
 - Behavioral simulations crossing the confirmation boundary — real bookings, orders, payments, or sends (§6).
 - Fabricated outcomes in `PROGRESS.md`, invented urgency/statistics in outreach, or any claim without traceable evidence (§12.6, §14.2).
+- Fabricating or mis-reconciling numbers — per-finding dollar figures, PROGRESS counts that don't match the audit.md (§10.3, §14.2).
+- Shipping findings with truncated titles, topic-mismatched solutions, duplicate findings, or evidence references to nonexistent files (§10).
+- Shipping a site whose behavioral findings lack independent reproduction (sample-based review) (§7).
+- Shipping an Outreach.md with an unfilled To:, a domain-as-brand name, or zero business-specific detail (§12).
 - Packaging a partial site, stray files, or skipping the §15 validation checklist.
 - Stopping before the single stopping condition of §5.5, or hiding incompletion instead of reporting it (§16).
