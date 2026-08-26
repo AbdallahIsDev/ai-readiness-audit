@@ -197,7 +197,7 @@ The naive model ("assign K sub-agents per website") breaks as websites scale, an
 
 Multiple sub-agents touch the same website across a wave — so file ownership is designed, not hoped for:
 
-- Check-units 1–4 write ONLY: `Screenshots/<domain>_check<N>_<seq>.png` files + a raw scratch file `check<N>_findings.md` inside the site folder. They never touch `_audit.md`, `README.md`, or `Outreach.md`.
+- Check-units 1–4 write ONLY: `Screenshots/<domain>_check<N>_<seq>.png` files (full-page captures per §4.6), per-page `data/<page>.json` files (§6.1), and a raw scratch file `check<N>_findings.md` inside the site folder. They never touch `_audit.md`, `README.md`, or `Outreach.md`.
 - Check-unit 5 (evidence compilation) READS raw check files, writes `check5_evidence_report.md`.
 - Check-unit 6 writes `README.md` and drafts `Outreach.md`.
 - FINAL assembly of `_audit.md` + `_audit.pdf` happens AFTER review confirmation — orchestrated by you (or a dedicated assembler sub-agent dispatched alone), merging only REVIEW-CONFIRMED findings (§8). One writer per file, always.
@@ -253,7 +253,10 @@ Nothing is "done" because a command didn't error. The loop runs on EVERY unit, e
 **Variant-specific requirements (in addition to the loop above):**
 
 - **Auditor variant (checks 1–4):** execute the assigned unit fully — capture evidence at the moment of observation, record the exact raw observation, write the finding with its real evidence references. Never write a finding for content you did not personally observe this unit.
+  - **Full-site crawl — EVERY page, never homepage-only.** First discover the site's complete page list (navigation, sitemap.xml, footer links, internal links), then visit EVERY page: homepage, About (mandatory — team, business story, background), Services/Products, Contact, Blog/News, and any sub-pages or detail pages. Never extract from the homepage alone, and never rely on one or two pages for business info. Data missing from the homepage but present on a deeper page is NOT a finding — you only judge a page after you have actually visited it. Per-page extracted data goes into a per-page JSON file per §6.1.
   - **Critical extraction sub-step (before any data extraction):** scroll the entire page from top to bottom before extracting any content. After the scroll, extract. Then compare: if the post-scroll extraction yields MORE data than a pre-scroll extraction would have (e.g. more sections, more text, more links), the site has animation-revealed content — flag this as a finding (animation hiding content from AI agents). Extracted data is only valid AFTER a full scroll. Never extract from a pre-scroll page state alone.
+  - **Full-page screenshots ONLY.** When a finding needs a screenshot, capture the ENTIRE page (full-page capture), never a cropped or custom area. A cropped capture can hide part of the problem; the full page shows everything. Screenshots go to `Screenshots/` per §7.
+  - **Analyze every screenshot.** After capturing ANY screenshot, immediately inspect it — actually look at the image — for visual problems: broken/overlapped layout, cut-off text, missing images, content that fails to render, sections that look wrong. A screenshot is evidence only after you have analyzed what it shows. Never capture-and-move-on.
 - **Reviewer variant (Review Waves):** pull a completed unit, IGNORE the auditor's conclusions initially, re-execute the check from scratch, compare results, and classify each finding CONFIRMED / CORRECTED (state the truth) / INCONSISTENT (→ downgraded to "needs manual verification", §8) / DISCARDED (no factual basis) — attaching YOUR OWN fresh evidence for every verdict. Reading the auditor's writeup and agreeing is not review.
 - **Copywriter variant (unit 6):** follow the §12 dual-mind protocol (Owner's-Chair then Salesman), draft `Outreach.md`, then run every §12.7 gate item, and hand off only a copy-paste-ready email.
 
@@ -298,7 +301,13 @@ Every site must clear ALL SIX. Checks 1 and 4 are deterministic/tool-driven; che
 3. **Agent Task Simulation — Transaction/Booking** (behavioral, Browser Use) — attempt the representative real task for THIS business type (book appointment, request quote, check availability, start an order/reservation), stopping at the confirmation boundary. Record how far it got, where friction or failure occurred, step by step.
 4. **Free-Tool Cross-Verification** (secondary — §9) — run the same categories check 1 covers through available free checker tools, purely to catch anything check 1 missed. Never substitutes for check 1.
 5. **Evidence Compilation & Verification** — for every finding produced by checks 1–4: confirm §8-grade proof exists and is correctly referenced; discard or flag anything short of the bar. Writes `check5_evidence_report.md`.
-6. **Business Profile & Outreach Drafting** — extract the business's own info (name, offerings, prices found, hours, locations, contacts) into `README.md` (§11); draft `Outreach.md` (§12) from confirmed findings only.
+6. **Business Profile & Outreach Drafting** — extract the business's own info (name, offerings, prices found, hours, locations, contacts) into `README.md` (§11); draft `Outreach.md` (§12) from confirmed findings only. Sources for this check are the per-page `data/*.json` files (§6.1) — the full business picture comes from ALL pages, never the homepage alone.
+
+### 6.1 Per-page data collection (mandatory, all checks)
+
+Every check operates across ALL pages of the site — never the homepage alone. The auditor first discovers the full site map: navigation, sitemap.xml, footer links, and any internal links found on the homepage and all subsequent pages. Then visits every discovered page.
+
+For each page visited, all extracted data — text content, discovered links, structured data, contact info, media references, hours, prices, team info — is written to a per-page JSON file stored in the site folder's `data/` directory (§9). File naming: `<page-name>.json` (e.g. `homepage.json`, `about.json`, `services.json`, `contact.json`, `blog.json`). These JSON files are FIRST-CLASS deliverables, not raw intermediates — they are included in `Deliverables.zip` and serve as the machine-readable evidence foundation for every finding. Every finding's Description/Evidence should reference which page produced it.
 
 ---
 
@@ -336,11 +345,16 @@ example-clinic-com/
 ├── example-clinic-com_audit.pdf     ← identical core content, client-presentable PDF layout
 ├── README.md                        ← business dossier (§11)
 ├── Outreach.md                      ← ready-to-send email (§12)
-└── Screenshots/
-    └── <domain>_check<N>_<seq>.png  ← every evidence image, referenced by findings
+├── Screenshots/
+│   └── <domain>_check<N>_<seq>.png  ← every evidence image, referenced by findings
+└── data/
+    ├── homepage.json                ← all data extracted from the homepage (§6.1)
+    ├── about.json                   ← all data extracted from the About page
+    ├── services.json                ← all data extracted from the Services page
+    └── <page-name>.json             ← one JSON per discovered page
 ```
 
-Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip` — each site folder contains exactly the five items above, nothing more.
+Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.1 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more.
 
 ---
 
@@ -379,7 +393,7 @@ Consistency IS the product: a client comparing two reports must find the same st
 
 ### 10.2 Evidence references must be real
 
-Every `Evidence:` line in the report references files that actually exist in that site's folder. Screenshots must be present under `Screenshots/`; any raw-capture file referenced must also be shipped in the same folder. A reference to a file that doesn't exist invalidates the finding's evidence — that finding does not ship. The client report must NOT contain a "Files in this site folder" inventory section (§4.3); all evidence references are inline per finding only.
+Every `Evidence:` line in the report references files that actually exist in that site's folder. Screenshots must be present under `Screenshots/`; any raw-capture file referenced must also be shipped in the same folder. Evidence may also reference the per-page `data/<page>.json` file (§6.1) that contains the raw extracted data from the page where the finding was observed. A reference to a file that doesn't exist invalidates the finding's evidence — that finding does not ship. The client report must NOT contain a "Files in this site folder" inventory section (§4.3); all evidence references are inline per finding only.
 
 ### 10.3 No internal jargon in client-facing files
 
@@ -573,7 +587,8 @@ Deliverables.zip
 │   ├── example-clinic-com_audit.pdf
 │   ├── README.md
 │   ├── Outreach.md
-│   └── Screenshots/
+│   ├── Screenshots/
+│   └── data/
 ├── another-business-com/ …
 └── PROGRESS_update_<date>.md    ← only if §14.3 push failed
 ```
@@ -582,7 +597,7 @@ Deliverables.zip
 
 - **NEVER zip with zero compression.** Build the archive with maximum compression (deflate). A `store`-method zip from a missed flag is a critical packaging failure — the archive is only done when it is genuinely compressed.
 - **Screenshot discipline starts at capture time** (screenshots dominate the zip size — this is the actual lever):
-  - Capture browser screenshots at a maximum width of **1000px** (smaller where the page allows). Never full-resolution 1280px+ captures.
+  - Capture browser screenshots as **FULL-PAGE captures** (§4.6 — never cropped/custom areas) at a maximum width of **1000px** (smaller where the page allows). Never full-resolution 1280px+ captures.
   - Save screenshots as **256-color palette PNGs** (quantized) — visually near-identical for UI/web captures, roughly 5–10× smaller than 32-bit PNG. Keep the `.png` extension and the EXACT filenames (`<domain>_check<N>_<seq>.png`): the audit markdown references screenshots by filename (§10 Evidence), so renaming or changing formats breaks every reference.
   - Never include a screenshot that proves nothing — every image in `Screenshots/` must map to a documented finding.
 - **Size target (preferable, not a fixed limit):** aim for `Deliverables.zip` to come in under ~10 MB. The final size can't be predicted before compression, so treat this as a guideline, not a hard cap — compress heavily (below), measure, then judge.
@@ -592,10 +607,10 @@ Deliverables.zip
 
 **Packaging validation checklist (run before finalizing; all must pass):**
 - [ ] Folder count == sites that cleared ALL six checks + Review + Assembly this session (NOT `NUMBER_OF_WEBSITES` if the queue didn't clear — §17 governs)
-- [ ] Every folder contains exactly the 5 required items; zero stray/raw files anywhere in the zip
+- [ ] Every folder contains exactly the 6 required items — 2 report files + README + Outreach + Screenshots/ + data/ (one JSON per page); zero stray/raw files anywhere in the zip
 - [ ] Every `.pdf` opens and matches its `.md` core content
 - [ ] Every finding's referenced screenshot exists in that folder's `Screenshots/`
-- [ ] Spot-check: 3 random `Outreach.md` files pass §12.7's gate; 3 random reports follow the §10 template exactly
+- [ ] Spot-check: 3 random `Outreach.md` files pass §12.7's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
 - [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
 - [ ] Zip built with real compression — never `store` method (§15.1)
