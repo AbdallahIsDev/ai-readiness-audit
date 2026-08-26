@@ -3,3 +3,6 @@ ai-readiness-audit-ledger/
 
 # Personal conversation log — not for publication
 session-context.txt
+
+# Local re-audit queue - kept off GitHub
+REAUDIT_QUEUE.md

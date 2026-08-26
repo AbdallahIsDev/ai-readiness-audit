@@ -13,7 +13,7 @@
 > No finding reaches a client-facing file unless it clears BOTH conditions in §8: (1) material proof captured at the moment of discovery (screenshot + raw content + timestamp), and (2) for behavioral findings, independent reproduction by a Review-Wave sub-agent who re-runs the check from scratch. A finding clearing only one gate is downgraded to "needs manual verification" and EXCLUDED from every client deliverable. One disprovable finding in a paying client's report is the exact "AI flop" outcome this entire workflow exists to prevent. When in doubt: leave it out, log it.
 
 > **FINDING INTEGRITY OVERRIDE — NO FABRICATED NUMBERS, NO FILLER, NO FAKE FILES. (NON-NEGOTIABLE)**
-> Every number, title, evidence reference, and solution in a client-facing file must be real, complete, and internally consistent. No invented dollar-loss estimates anywhere (§10.3); every Evidence reference points to a file that physically exists in that site's folder (§10.2); finding titles are complete, never truncated with "..." (§10.1); each Solution addresses the SAME topic as its Description (§10.1); an observed strength is labeled a Strength, never shipped as a defect (§10.1); duplicate findings (same root cause from multiple checks) are merged into one (§4.6); and PROGRESS.md counts match the actual audit.md findings (§14.2). Break any of these and that finding/file is discarded or rewritten — it does not ship.
+> Every number, title, evidence reference, and solution in a client-facing file must be real, complete, and internally consistent. No fabricated/invented dollar-loss figures anywhere — the only dollar figure allowed is a researched, conservative left-on-table estimate per §12.6, never a severity-weight formula or a rounded-up guess; every Evidence reference points to a file that physically exists in that site's folder (§10.2); finding titles are complete, never truncated with "..." (§10.1); each Solution addresses the SAME topic as its Description (§10.1); an observed strength is labeled a Strength, never shipped as a defect (§10.1); duplicate findings (same root cause from multiple checks) are merged into one (§4.6); and PROGRESS.md counts match the actual audit.md findings (§14.2). Break any of these and that finding/file is discarded or rewritten — it does not ship.
 
 > **FREE TOOLS ARE SECONDARY, NEVER PRIMARY. (NON-NEGOTIABLE)**
 > Every check must first be executable natively by the cloud agent and its sub-agents. Free third-party checker tools are run IN ADDITION as a cross-check layer (§9) — they may catch what the native audit missed; they may never replace, block, slow, or define completeness for the native audit. Rate limits, paywalls, and auth walls mid-run are EXPECTED — log once, ignore, continue. Never create accounts, never provide identity or payment details — the sandbox has none and must not fabricate any.
@@ -258,7 +258,7 @@ Nothing is "done" because a command didn't error. The loop runs on EVERY unit, e
   - **Full-page screenshots ONLY.** When a finding needs a screenshot, capture the ENTIRE page (full-page capture), never a cropped or custom area. A cropped capture can hide part of the problem; the full page shows everything. Screenshots go to `Screenshots/` per §7.
   - **Analyze every screenshot.** After capturing ANY screenshot, immediately inspect it — actually look at the image — for visual problems: broken/overlapped layout, cut-off text, missing images, content that fails to render, sections that look wrong. A screenshot is evidence only after you have analyzed what it shows. Never capture-and-move-on.
 - **Reviewer variant (Review Waves):** pull a completed unit, IGNORE the auditor's conclusions initially, re-execute the check from scratch, compare results, and classify each finding CONFIRMED / CORRECTED (state the truth) / INCONSISTENT (→ downgraded to "needs manual verification", §8) / DISCARDED (no factual basis) — attaching YOUR OWN fresh evidence for every verdict. Reading the auditor's writeup and agreeing is not review.
-- **Copywriter variant (unit 6):** follow the §12 dual-mind protocol (Owner's-Chair then Salesman), draft `Outreach.md`, then run every §12.7 gate item, and hand off only a copy-paste-ready email.
+- **Copywriter variant (unit 6):** follow the §12 dual-mind protocol (Owner's-Chair then Salesman), research the business economics per §12.6, draft `Outreach.md`, then run every §12.8 gate item, and hand off only a copy-paste-ready email.
 
 ---
 
@@ -362,7 +362,7 @@ Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) sta
 
 **This report is written FOR THE BUSINESS OWNER, not for you, not for engineers.** The owner is non-technical. Everything in the report must make sense to them, in plain language. No internal workflow jargon, no check numbers, no audit-method details, no severity jargon that lets them dismiss a real problem. They must read it, understand each problem, and agree it's worth fixing.
 
-Top of file: **Executive Summary** — one short intro line about the business, a plain count of problems found, and a one-paragraph plain-English story of what being invisible to AI assistants means for THIS business.
+Top of file: **Executive Summary** — one short intro line about the business, a plain count of problems found, a one-paragraph plain-English story of what being invisible to AI assistants means for THIS business, and — where a defensible estimate exists per §12.6 — the approximate left-on-table figure phrased as a conservative estimate.
 
 Each finding follows this exact shape, in every file, for every site:
 
@@ -375,9 +375,9 @@ Each finding follows this exact shape, in every file, for every site:
 **Solution:** the concrete fix — LAST subsection in every finding, consistently.
 ```
 
-No "Severity:" line in the client report. No "Check source:" line. No "Reproduction:" line. No dollar-loss figures. No internal section references (no § numbers, no "per §10", no "Check 2", no "Gate-2"). The owner reads findings as numbered problems, nothing else. (Severity is tracked internally in `worklog.md` for your prioritization only — it never appears in the client file.)
+No "Severity:" line in the client report. No "Check source:" line. No "Reproduction:" line. No fabricated dollar-loss figures. No internal section references (no § numbers, no "per §10", no "Check 2", no "Gate-2"). The owner reads findings as numbered problems, nothing else. (Severity is tracked internally in `worklog.md` for your prioritization only — it never appears in the client file.)
 
-The one place a dollar figure MAY appear is a strength/opportunity context in outreach (§12.4), not as a fabricated annual-loss claim. There is NO fabricated loss-estimate anywhere in the client deliverables.
+The one place a researched dollar figure MAY appear is the left-on-table estimate per §12.6 — in the Executive Summary and/or the Outreach body, always phrased as a conservative approximate estimate, never as exact accounting. There is NO fabricated/unresearched loss-estimate anywhere in the client deliverables.
 
 PDF generation: render from the `.md` (pandoc → weasyprint → wkhtmltopdf → headless Chromium `--print-to-pdf` fallback chain; the Browser Use environment ships Chromium, so a path always exists). PDF layout adapts to the format (cover header, page breaks between findings, screenshots embedded at referenced points) while core content stays identical to the Markdown. If every PDF path somehow fails, ship HTML print-ready + log it — but try the chain first.
 
@@ -399,14 +399,14 @@ Every `Evidence:` line in the report references files that actually exist in tha
 
 Client-facing files (`_audit.md`, `_audit.pdf`, `README.md`, `Outreach.md`) are for the BUSINESS OWNER — not for you, not for the engineer who requested the audit. Apply these rules to every client-facing file:
 
-- **Banned terms** (translate to plain English or remove): "Check 1", "Check 2", "Check 3", "Check 4", "Check source", "Reproduction", "Gate-2", "needs manual verification", "downgraded", "Review Wave", "Audit Wave", "industry group G2", "orchestrator-direct", "degraded mode", "Browser Use", "§10", "§13.4", "per §7", "severity", "Critical/High/Medium/Low severity labels", "estimated annual loss", "findings shipped to client", "findings downgraded".
+- **Banned terms** (translate to plain English or remove): "Check 1", "Check 2", "Check 3", "Check 4", "Check source", "Reproduction", "Gate-2", "needs manual verification", "downgraded", "Review Wave", "Audit Wave", "industry group G2", "orchestrator-direct", "degraded mode", "Browser Use", "§10", "§13.4", "per §7", "severity", "Critical/High/Medium/Low severity labels", "findings shipped to client", "findings downgraded".
 - **Legitimate technical terms are NOT banned** — `robots.txt`, `JSON-LD`, `schema.org`, and `llms.txt` are real findings, not internal jargon. When one is the actual subject of a finding (e.g. "robots.txt blocks AI crawlers"), name it directly — precise terminology is what makes the report credible. Ban only the internal-workflow jargon above, never the technical substance of the audit.
 - **Fail: "See Check 3 if reachable"** → succeed: embed the screenshot directly or link to `Screenshots/<filename>.png`.
 - **Fail: "Not extracted. See Check 2 robots.txt"** → succeed: state the fact in plain English ("No social media links found on the homepage" or add the actual links if found).
 - **Fail: "Audit method: orchestrator-direct (Python scripts + agent-browser CLI fallback per §2.3 degraded-mode worklog)"** → the owner does not care how you ran the audit. Remove this line entirely from the client report.
 - **Fail: "Findings downgraded to needs manual verification: 0"** → the owner does not know or care about your internal verification process. Remove this line entirely.
 - **Fail: "Findings shipped to client: 8 (0 Critical, 0 High, 6 Medium, 2 Low)"** → the owner only needs to know how many problems were found. Write: "**Problems found: 8**" — no severity breakdown. Severity is for your internal prioritization only.
-- **Fail: "Estimated annual loss from AI-agent invisibility: $1110 (severity-weighted, clamped...)"** — fabricated numbers destroy credibility. Remove the loss estimate entirely. The problems speak for themselves.
+- **Fail: "Estimated annual loss from AI-agent invisibility: $1110 (severity-weighted, clamped...)"** — fabricated, formula-invented numbers destroy credibility. A researched left-on-table estimate per §12.6 IS allowed, but only when it is traceable to industry research and phrased as a conservative approximation. Never a severity-weight formula, never a rounded-up guess.
 
 Every reference to another finding, section, or file from within a client-facing document must point to something the reader can actually find and understand. If the reference is meaningless to a business owner, it should not exist.
 
@@ -499,7 +499,7 @@ Subject: <see 12.3>
 — [Your name]
 ```
 
-No attachments mentioned, no links required (link-free avoids spam filters; the report is offered, sent on reply). An email whose `To:` is empty or a placeholder is NOT ready and fails the §12.7 gate — the deliverable is only "ready to copy-paste" when the recipient is real. If no verifiable email exists on the site, that site's Outreach.md cannot be marked ready.
+No attachments mentioned, no links required (link-free avoids spam filters; the report is offered, sent on reply). An email whose `To:` is empty or a placeholder is NOT ready and fails the §12.8 gate — the deliverable is only "ready to copy-paste" when the recipient is real. If no verifiable email exists on the site, that site's Outreach.md cannot be marked ready.
 
 ### 12.3 Subject line rules
 
@@ -511,7 +511,7 @@ Good pattern examples (adapt, never mass-template): `Question about <Business>'s
 
 1. **Hook (1–2 sentences):** one SPECIFIC verified finding on THEIR site, described in human terms, referencing at least one REAL business-specific detail (the actual booking platform by name, a specific service, a widget, a genuine quirk — never a pure domain/city substitution). "When someone asks ChatGPT for a <trade> in <city>, your site doesn't come up — I checked why." Not "your website has issues."
 2. **Bridge (1–2 sentences):** why now — people increasingly ask AI assistants instead of searching, and assistants recommend businesses they can read.
-3. **Proof (1 sentence + optional screenshot):** the email must convince a skeptical owner this is real, not a scam. State the count of concrete problems found on THEIR site ("I found 8 specific things on your site that do this"). The strongest proof is a single screenshot of one visible problem on their own site embedded in the email — one screenshot, one problem, no more. If a screenshot is included, reference it directly (e.g. `![screenshot](/Screenshots/...png)` in `Outreach.md`) so the owner sees their own site and thinks "they actually looked." A screenshot of an ABSENT thing (like a missing contact form) is useless — only screenshot what exists.
+3. **Proof (1–2 sentences + optional screenshot):** the email must convince a skeptical owner this is real, not a scam. State the count of concrete problems found on THEIR site ("I found 8 specific things on your site that do this"). Then, if a defensible estimate exists per §12.6, state the approximate left-on-table figure: "Conservatively, this likely costs you around $X/year in lost jobs." The strongest proof is a single screenshot of one visible problem on their own site embedded in the email — one screenshot, one problem, no more. If a screenshot is included, reference it directly (e.g. `![screenshot](/Screenshots/...png)` in `Outreach.md`) so the owner sees their own site and thinks "they actually looked." A screenshot of an ABSENT thing (like a missing contact form) is useless — only screenshot what exists.
 4. **Offer (2 sentences):** two tiers, plainly and credibly: a full written audit + priority fixes for `$FIXED_AUDIT_FEE_USD`; or the audit report alone (everything found, clearly explained) for `$200`. The full package is NOT more expensive because fixing is "extra" — the report-only tier is simply the cheaper option for owners who want to decide first. No pricing gymnastics, no fake discounts, no "act now" urgency.
 5. **CTA (1 sentence):** a single, concrete, low-pressure ask. BANNED phrasing: "Reply 'send it' and I'll email you the summary" — this is the exact wording of common scam posts on X/Twitter and instantly reads as a scam. Use a direct, honest alternative, e.g. "If you'd like, I can email the full list — just reply and I'll send it." or "Reply to this email and I'll send over the details." No "comment 'X'" patterns, no gimmicky engagement bait.
 
@@ -519,11 +519,25 @@ Good pattern examples (adapt, never mass-template): `Question about <Business>'s
 
 Fifth-grade reading level. BANNED vocabulary (translate to outcomes instead): schema, structured data, SEO, crawl/crawler, render, metadata, optimization, "AI-powered solutions". Say "when someone asks ChatGPT/Siri/Google's AI about...", "your site hides its prices from them", "a rival gets picked instead."
 
-### 12.6 Truthfulness constraints (hard)
+### 12.6 Business intelligence — the left-on-table estimate
 
-Every claim traces to a CONFIRMED finding in that site's report. No fabricated dollar-loss figures anywhere. No invented urgency, scarcity, or statistics. No claiming things "everyone knows" that we didn't verify. If the audit found little wrong, the email says so honestly — trust compounds; one exaggerated email burns the niche.
+Before writing the email, the copywriter must understand THIS business's money — zoom out, look at the business from above, and form a real picture of what it earns. This is not a fabricated formula; it is a researched, conservative estimate that makes the owner pay attention.
 
-### 12.7 Quality gate
+**The research pass (mandatory, before any draft):**
+1. **Understand the business type's economics.** Even when the site lists no prices (very common for service businesses), establish the industry's realistic numbers: average job/project value, typical revenue per client, revenue per day/month for this business type. Use web search for industry averages (e.g. "average electrician job value", "plumber average invoice", "salon revenue per client") and reason from the business's own signals (location, service area, team size, premium vs budget positioning).
+2. **Estimate how many clients the audited problems cost.** Take a conservative view: of the customers who would have found and used this business through an AI assistant, what fraction are currently lost to the identified problems? Be conservative — never inflate. If evidence supports "some are lost", use a modest share.
+3. **Compute the left-on-table number.** `(estimated lost clients per month) × (average revenue per client)`. The result is an APPROXIMATE annual figure. It is explicitly an estimate — reasonable, defensible, never exact.
+4. **Sanity-check against the business type.** An electrician losing a single client is losing thousands (average job value), so a $1,000 "annual loss" figure for a trade business is implausible — flag and correct such numbers. The number must feel true for THIS industry, not formulaic.
+
+**Where it goes:** the left-on-table number appears in the Outreach body (§12.4 point 3, replacing the old fabricated figure) and MAY appear once in the audit Executive Summary — always phrased as an approximate estimate ("conservatively, this likely costs you around $X/year in lost jobs"), never as an exact accounting. The number's only job: make the modest fix fee ($500) look trivial next to the money at stake.
+
+**Truthfulness bar:** the estimate must be traceable to (a) industry-average research the copywriter actually performed, and (b) a conservative reasoning chain. It must never be a rounded-up guess, never "severity-weighted formula" output, never a number invented to impress. If the copywriter cannot build a defensible estimate, it omits the number rather than fabricating one.
+
+### 12.7 Truthfulness constraints (hard)
+
+Every claim traces to a CONFIRMED finding in that site's report. No invented urgency, scarcity, or statistics. No claiming things "everyone knows" that we didn't verify. The left-on-table estimate (§12.6) is clearly labeled as an approximate estimate, never presented as exact accounting. If the audit found little wrong, the email says so honestly — trust compounds; one exaggerated email burns the niche.
+
+### 12.8 Quality gate
 
 An outreach draft ships only after the §4.6 copywriter variant + this gate pass ALL of the following:
 - `To:` is filled with a real recipient name + email from the README dossier (never empty/placeholder) — §12.2.
@@ -531,10 +545,11 @@ An outreach draft ships only after the §4.6 copywriter variant + this gate pass
 - The real trade name is used in the subject/hook — never the raw domain as a fake brand (§12.3).
 - ≥2 unique personalization details from README facts, including at least ONE genuine technical/business detail from the audit evidence (booking platform by name, a widget, a service quirk) — not just domain/city substitutions (§12.4).
 - Proof present: the email states the confirmed problem count and, where a visible problem exists, embeds ONE screenshot of it (§12.4 point 3).
+- If a left-on-table figure is included, the §12.6 research pass was actually performed and is traceable (industry-average source + conservative reasoning recorded in the sub-worklog); otherwise no figure was invented (§12.6).
 - CTA is the honest direct alternative — the banned "Reply 'send it'..." phrasing is never used (§12.4 point 5).
 - Pricing is the two-tier structure: full audit + fixes at `$FIXED_AUDIT_FEE_USD`, report-only at `$200` — no "fixing is extra" framing (§12.4 point 4).
-- Zero banned words; ≤150 words; correct grammar (no "a independent" errors); single CTA; no fabricated dollar-loss figures (§12.6).
-- Every factual claim is traceable to a confirmed finding (§12.6).
+- Zero banned words; ≤150 words; correct grammar (no "a independent" errors); single CTA; no fabricated dollar-loss figures (§12.7).
+- Every factual claim is traceable to a confirmed finding (§12.7).
 - Final gut test answers YES to "would I, sitting in this owner's chair, reply to this?"
 
 A draft failing any of the above = redo. A draft that only passes the Salesman pass but fails the Owner's-Chair test = redo. Generic-feeling output = redo.
@@ -610,7 +625,7 @@ Deliverables.zip
 - [ ] Every folder contains exactly the 6 required items — 2 report files + README + Outreach + Screenshots/ + data/ (one JSON per page); zero stray/raw files anywhere in the zip
 - [ ] Every `.pdf` opens and matches its `.md` core content
 - [ ] Every finding's referenced screenshot exists in that folder's `Screenshots/`
-- [ ] Spot-check: 3 random `Outreach.md` files pass §12.7's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
+- [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
 - [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
 - [ ] Zip built with real compression — never `store` method (§15.1)
@@ -620,7 +635,7 @@ Deliverables.zip
 - [ ] No finding references a file that doesn't exist; no false "Files in this site folder" inventory (§10.2)
 - [ ] Finding-integrity spot check (3 random reports): titles not truncated, Solution topic matches Description, no duplicate findings, no fabricated dollar-loss figures, impact is per-topic (§10.1/§10.3)
 - [ ] Client-audience spot check (3 random reports + 3 READMEs): no internal jargon (Check N, severity labels, audit method, section references), About written as a summary not a paste, fields filled or "None" (§10.3, §11)
-- [ ] Outreach spot check (3 random): To: filled, real trade name used, ≥1 technical business-specific detail (§12.7)
+- [ ] Outreach spot check (3 random): To: filled, real trade name used, ≥1 technical business-specific detail, left-on-table figure (if present) traceable to §12.6 research (§12.8)
 
 ---
 
@@ -631,14 +646,14 @@ The session is DONE only when ALL of the following hold — evaluated once, hone
 1. Full `NUMBER_OF_WAVES` ran, ending on a Review Wave whose close-out loop left ZERO remaining must-fix items (§5.5).
 2. The coverage matrix shows every shipped site at 6/6 checks + Reviewed + Assembled; no partially-audited site anywhere near the deliverables.
 3. Evidence gate sweep (to-do item 8) passed: every shipped finding has Gate-1 proof; every behavioral finding has Gate-2 reproduction or sits in `needs manual verification` — excluded from client files, counted in the Final Report.
-4. Every shipped site has valid `Outreach.md` (§12.7 gate) and `README.md` (§11 spec).
+4. Every shipped site has valid `Outreach.md` (§12.8 gate) and `README.md` (§11 spec).
 5. `Deliverables.zip` built and passed the §15 checklist.
 6. Ledger synced per §14.3 with truthful status.
 7. `worklog.md` reflects the real run — including failures, degraded modes, downgraded findings, and skipped candidates.
 8. Review coverage is 100% — every shipped site's behavioral findings were independently reproduced; no sample-based review (§7).
 9. Finding-integrity sweep passed: no truncated titles, no topic-mismatched solutions, no duplicate findings, no fabricated dollar-loss figures, no evidence references to nonexistent files (§10.1–§10.3).
 10. PROGRESS.md counts reconciled against actual audit.md findings (§14.2).
-11. Client-audience check passed: no internal jargon in any client-facing file (§10.3); every README follows the §11 template; outreach passes the full §12.7 gate.
+11. Client-audience check passed: no internal jargon in any client-facing file (§10.3); every README follows the §11 template; outreach passes the full §12.8 gate including §12.6 left-on-table research traceability.
 
 If wave budget ran out before clearing the queue, that is stated PLAINLY in the Final Report as current state — which sites completed, which didn't and why, and the concrete recommendation (bigger pools / more waves / fewer sites) for next session. Honest incompletion is acceptable; hidden incompletion and trimmed audits are critical failures.
 
@@ -672,7 +687,7 @@ Violation of any of the following is a CRITICAL FAILURE of the run, regardless o
 - Launching a wave short of configured count without immediate correction, or running waves concurrently/out of sequence (§5.1, §5.4).
 - Enterprise targets entering the audit queue (§3 banners, §3.2 Q2).
 - Behavioral simulations crossing the confirmation boundary — real bookings, orders, payments, or sends (§6).
-- Fabricated outcomes in `PROGRESS.md`, invented urgency/statistics in outreach, or any claim without traceable evidence (§12.6, §14.2).
+- Fabricated outcomes in `PROGRESS.md`, invented urgency/statistics in outreach, or any claim without traceable evidence (§12.7, §14.2).
 - Fabricating or mis-reconciling numbers — invented dollar-loss figures, per-finding dollar figures, PROGRESS counts that don't match the audit.md (§10.3, §14.2).
 - Shipping findings with truncated titles, topic-mismatched solutions, duplicate findings, or evidence references to nonexistent files (§10).
 - Shipping a site whose behavioral findings lack independent reproduction (sample-based review) (§7).
