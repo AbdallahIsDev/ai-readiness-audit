@@ -34,7 +34,6 @@ controls:
   MIN_ANNUAL_LOSS_ESTIMATE_USD: 1000   # loss-estimate floor quoted to clients — small enough to be believable to a plumber (§4.2 Q4, §13)
   MAX_ANNUAL_LOSS_ESTIMATE_USD: 2000   # ceiling — keeps the number "small but real," never inflated hype
   FIXED_AUDIT_FEE_USD: 500        # tier-1 price anchor used verbatim in outreach offers (§13.4)
-  MAX_DELIVERABLE_ZIP_MB: 5       # HARD size budget for Deliverables.zip — the download gateway fails above this (§15.1). Never exceed.
   FREE_TOOL_MODE: SECONDARY_ONLY  # FIXED — see override banner above. Not a toggle.
   BROWSER_ENGINE: BROWSER_USE     # FIXED unless §2.3's degraded-mode path triggers.
   LEDGER_REPO_URL: https://github.com/AbdallahIsDev/ai-readiness-audit-ledger
@@ -488,8 +487,8 @@ Deliverables.zip
   - Capture browser screenshots at a maximum width of **1000px** (smaller where the page allows). Never full-resolution 1280px+ captures.
   - Save screenshots as **256-color palette PNGs** (quantized) — visually near-identical for UI/web captures, roughly 5–10× smaller than 32-bit PNG. Keep the `.png` extension and the EXACT filenames (`<domain>_check<N>_<seq>.png`): the audit markdown references screenshots by filename (§10 Evidence), so renaming or changing formats breaks every reference.
   - Never include a screenshot that proves nothing — every image in `Screenshots/` must map to a documented finding.
-- **Hard size budget:** `Deliverables.zip` MUST stay under `MAX_DELIVERABLE_ZIP_MB` (default 5 MB). The download gateway fails above this, and an undownloadable deliverable is a failed run no matter how correct the audit was.
-- **If over budget:** compress harder BEFORE splitting — drop screenshots to 800px, re-quantize aggressively, strip redundant near-duplicate frames. Only if still over budget after that genuine attempt, split into `Deliverables_part1.zip` / `Deliverables_part2.zip` (per-site folders partitioned, `PROGRESS_update_…` in part 1) and state the split in the Final Report. Never ship a single oversized zip the user cannot download.
+- **Size target (preferable, not a fixed limit):** aim for `Deliverables.zip` to come in under ~10 MB. The final size can't be predicted before compression, so treat this as a guideline, not a hard cap — compress heavily (below), measure, then judge.
+- **If it comes out too large to download:** compress harder BEFORE splitting — drop screenshots to 800px, re-quantize aggressively, strip redundant near-duplicate frames. Only if still too large after that genuine attempt, split into `Deliverables_part1.zip` / `Deliverables_part2.zip` (per-site folders partitioned, `PROGRESS_update_…` in part 1) and state the split in the Final Report. Never ship a single zip the user cannot download.
 - **Integrity verification after compression (mandatory):** after re-zipping, verify the archive opens, the file count matches the source set, folder structure is intact, and every markdown-referenced screenshot path resolves inside the zip. A size win that corrupted data is worthless — a corrupted deliverable is worse than a big one. Compress first, verify second, ship third.
 
 **Packaging validation checklist (run before finalizing; all must pass):**
@@ -501,7 +500,7 @@ Deliverables.zip
 - [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
 - [ ] Zip built with real compression — never `store` method (§15.1)
-- [ ] Total zip ≤ `MAX_DELIVERABLE_ZIP_MB`; if split, every part downloads under the limit
+- [ ] Zip size preferably under ~10 MB; if larger, compress harder or split — never undownloadable
 - [ ] Post-compression integrity check passed: opens, file count + structure + every markdown-referenced screenshot path intact (§15.1)
 
 ---
