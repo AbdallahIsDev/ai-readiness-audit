@@ -7,7 +7,8 @@ session-context.txt
 # Local re-audit queue - kept off GitHub
 REAUDIT_QUEUE.md
 
-# Local skill installs - cloud agent installs its own via §2.5
+# Local skill installs - the shipped skills live in skills/ (committed)
+# .agents/ and .commandcode/ are local install artifacts, not committed
 .agents/
 .commandcode/
 skills-lock.json

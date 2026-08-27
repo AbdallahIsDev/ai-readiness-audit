@@ -109,37 +109,32 @@ Using your native task-tracking tool, build the to-do list covering the ENTIRE s
 
 Work the list strictly top-to-bottom. Update statuses as work actually completes, never in a batch. Nothing silently dropped — out-of-scope items get marked with why. Rules bind the agents that act: every rule governing a sub-agent's work is pasted VERBATIM into that sub-agent's prompt text (§4.5) — never assume a sub-agent absorbed the main prompt.
 
-### 2.5 Skill Dependencies — Install & Read Before Any Work
+### 2.5 Skill Dependencies — Shipped in the Repo, Read Every Byte
 
-These skills extend the agent's knowledge with authoritative standards for the exact categories this audit covers. The orchestrator MUST install them at session start, then read EVERY SKILL.md in full — not cherry-picked checkpoints, not summaries, the entire file. Every sub-agent MUST also read the full SKILL.md of every skill relevant to its assigned check-units (§4.5) before starting work.
+All required skills ship inside the `skills/` directory of this repo (`https://github.com/AbdallahIsDev/ai-readiness-audit-directive`). They are already here — no network install needed. Clone this repo (or if you already have it in your workspace, locate the `skills/` folder), then copy the `skills/` directory into your active skills folder (e.g. `cp -r skills/* ~/.agents/skills/` or the equivalent path for your runtime). Once there, READ EVERY BYTE of every single file in every skill before starting any work.
 
-**Install commands (run in the sandbox at session start):**
+**Reading discipline — NON-NEGOTIABLE, applies to the orchestrator AND every sub-agent:**
 
-```bash
-npx skills add bartwaardenburg/isagentready-skills -y
-npx skills add coreyhaines31/marketingskills@cold-email -y
-npx skills add coreyhaines31/marketingskills@ai-seo -y
-npx skills add lancelin111/crawl4ai-skill@crawl4ai-skill -y
-npx skills add squirrelscan/skills@audit-website -y
-npx skills add duc01226/easyplatform@markdown-to-pdf -y
-```
+- Every sub-agent reads the FULL SKILL.md AND every reference file (`references/*.md`) of every skill relevant to its assigned check-units, cover to cover, before starting any work. Not skimming, not searching for keywords, not reading summaries — every sentence, every checkpoint table, every code block, every gotcha.
+- The sub-agent confirms in its sub-worklog that it has read them, naming each file.
+- If a finding the sub-agent produces contradicts a skill's standard, the skill is RIGHT and the finding is WRONG — the sub-agent revises.
+- The `cold-email` and `ai-seo` skills are read by the copywriter sub-agent (unit 6). The `audit-website` skill is read by all auditor sub-agents. The `crawl4ai-skill` is read by auditor sub-agents performing data extraction. The `markdown-to-pdf` skill is read by the assembler. The five `isagentready` skills are read by every auditor sub-agent (checks 1–4).
+- This rule is embedded verbatim into every sub-agent prompt (§4.5).
 
-**What each skill covers — tells you which sub-agents must read it:**
+**What each skill covers:**
 
 | Skill | Covers | Must be read by |
 |---|---|---|
-| `ai-content-discovery` (full SKILL.md) | robots.txt, AI crawler directives, sitemaps, llms.txt, meta robots, freshness | Auditor sub-agents (check 1) |
-| `structured-data` (full SKILL.md) | JSON-LD, Schema.org types, entity linking, breadcrumbs, FAQ, author markup | Auditor sub-agents (check 1) |
-| `content-semantics` (full SKILL.md) | SSR, heading hierarchy, semantic HTML, ARIA, alt text, forms, keyboard nav | Auditor sub-agents (checks 1–2) |
-| `agent-protocols` (full SKILL.md) | WebMCP, A2A, MCP discovery, OpenAPI, agents.json | Auditor sub-agents (check 1) |
-| `security-trust` (full SKILL.md) | HTTPS, HSTS, CSP, X-Content-Type-Options, frame protection, CORS, Referrer-Policy | Auditor sub-agents (check 4) |
-| `cold-email` (full SKILL.md) | Cold email copywriting, voice/tone, structure, personalization | Copywriter sub-agent (unit 6) |
-| `ai-seo` (full SKILL.md) | AI search visibility, how AI search works, competitive landscape | Copywriter sub-agent (unit 6) |
-| `crawl4ai-skill` (full SKILL.md) | Efficient full-site crawling for data extraction | Auditor sub-agents (check 1, data/*.json) |
-| `audit-website` (full SKILL.md) | General website audit checklists | All auditor sub-agents |
-| `markdown-to-pdf` (full SKILL.md) | Converting markdown to PDF reports | Assembler / orchestrator |
-
-**Reading discipline:** "Read in full" means opening the SKILL.md file from start to end, reading every line. Not skimming, not searching for keywords. The skill files are the authoritative reference for the audit categories — if a sub-agent's finding contradicts a skill's standard, the skill is right and the finding is wrong.
+| `ai-content-discovery` (entire skill dir) | robots.txt, AI crawler directives, sitemaps, llms.txt, meta robots, freshness | Auditor sub-agents (check 1) |
+| `structured-data` (entire skill dir) | JSON-LD, Schema.org types, entity linking, breadcrumbs, FAQ, author markup | Auditor sub-agents (check 1) |
+| `content-semantics` (entire skill dir) | SSR, heading hierarchy, semantic HTML, ARIA, alt text, forms, keyboard nav | Auditor sub-agents (checks 1–2) |
+| `agent-protocols` (entire skill dir) | WebMCP, A2A, MCP discovery, OpenAPI, agents.json | Auditor sub-agents (check 1) |
+| `security-trust` (entire skill dir) | HTTPS, HSTS, CSP, X-Content-Type-Options, frame protection, CORS, Referrer-Policy | Auditor sub-agents (check 4) |
+| `cold-email` (entire skill dir) | Cold email copywriting, voice/tone, structure, personalization | Copywriter sub-agent (unit 6) |
+| `ai-seo` (entire skill dir) | AI search visibility, how AI search works, competitive landscape | Copywriter sub-agent (unit 6) |
+| `crawl4ai-skill` (entire skill dir) | Efficient full-site crawling for data extraction | Auditor sub-agents (check 1, data/*.json extraction) |
+| `audit-website` (entire skill dir) | General website audit checklists | All auditor sub-agents |
+| `markdown-to-pdf` (entire skill dir) | Converting markdown to PDF reports | Assembler / orchestrator |
 
 ---
 
