@@ -21,7 +21,7 @@
 > Every check must first be executable natively by the cloud agent and its sub-agents. Free third-party checker tools are run IN ADDITION as a cross-check layer (§9) — they may catch what the native audit missed; they may never replace, block, slow, or define completeness for the native audit. Rate limits, paywalls, and auth walls mid-run are EXPECTED — log once, ignore, continue. Never create accounts, never provide identity or payment details — the sandbox has none and must not fabricate any.
 
 > **BIG-RUN POLICY — NO SKIPPING, NO DEFERRING, NO HALF AUDITS. (NON-NEGOTIABLE)**
-> Task volume is never a reason to skip, defer, or thin out work — not for the orchestrator and not for any sub-agent. Every website admitted to the queue gets the IDENTICAL full treatment: all six checks (§7), full evidence capture (§8), full review pass (§6), both report files, README, and outreach draft. No site gets "the light version" while another gets the full version — unequal coverage corrupts the product and is a critical failure. If the session cannot finish everything, §6.5's honest-incompletion rules apply instead of silent trimming.
+> Task volume is never a reason to skip, defer, or thin out work — not for the orchestrator and not for any sub-agent. Every website admitted to the queue gets the IDENTICAL full treatment: all six checks (§7), full evidence capture (§8), full review pass (§6), both report files, README, and outreach draft. No site gets "the light version" while another gets the full version — unequal coverage corrupts the product and is a critical failure. If the session cannot finish everything, §16's honest-incompletion rules apply instead of silent trimming.
 
 ---
 
@@ -75,7 +75,7 @@ A reviewer persona that rubber-stamps its team's findings, an auditor persona th
 1. Create a session working directory. All intermediate work lives there until packaging.
 2. **PRIVACY: the session working directory must be COMPLETELY OUTSIDE the ledger repo clone.** Never create site folders, draft files, or any site artifact inside the cloned ledger directory — the ledger's `.gitignore` blocks accidental commits, but the safest approach is to keep the entire workspace hierarchy separate from the ledger. Clone the ledger, then work in a sibling directory (e.g. `../audit-session-N/`).
 3. Create `worklog.md` immediately — edited continuously after every meaningful step, never written once at the end, append-only. Required sections:
-   `Session Goal (Controls used) | Exclusion Set Loaded (Y/N, row count) | Browser Mode | Candidate Pool & Screening Log | Coverage Matrix (§6.6) | Task Plan | Wave Log (one entry per wave: number, type, roster, units claimed/completed, outcome) | Review Wave Findings (tagged by wave) | Completed Sites | Incomplete Sites | Downgraded Findings ("needs manual verification") | Free Tool Failures | Failed Attempts | Important Discoveries | Self-Directed Improvements | Ledger Sync Result`
+   `Session Goal (Controls used) | Exclusion Set Loaded (Y/N, row count) | Browser Mode | Candidate Pool & Screening Log | Coverage Matrix (§5.6) | Task Plan | Wave Log (one entry per wave: number, type, roster, units claimed/completed, outcome) | Review Wave Findings (tagged by wave) | Completed Sites | Incomplete Sites | Downgraded Findings ("needs manual verification") | Free Tool Failures | Failed Attempts | Important Discoveries | Self-Directed Improvements | Ledger Sync Result`
    **`worklog.md` must be written for a reviewer who was NOT in the session.** It is the ONLY record of how this session was run — what the agent decided and why, what it tried, what failed, what it discovered. The operator reads it after the session to audit the agent's reasoning and find repeated mistakes. Every decision worth making, every failed attempt, every discovery gets a timestamped entry. A sparse worklog is a failed deliverable — it must be detailed enough for a third party to reconstruct the session's thinking.
 4. After every significant append, surface a one-line version in chat too — if the workspace dies mid-session, the chat transcript reconstructs `worklog.md`.
 
@@ -229,7 +229,7 @@ The naive model ("assign K sub-agents per website") breaks as websites scale, an
 
 Multiple sub-agents touch the same website across a wave — so file ownership is designed, not hoped for:
 
-- Check-units 1–4 write ONLY: `Screenshots/<domain>_check<N>_<seq>.png` files (full-page captures per §4.6), per-page `data/<page>.json` files (§6.1), and a raw scratch file `check<N>_findings.md` inside the site folder. They never touch `_audit.md`, `README.md`, or `Outreach.md`.
+- Check-units 1–4 write ONLY: `Screenshots/<domain>_check<N>_<seq>.png` files (full-page captures per §4.6), per-page `data/<page>.json` files (§6.3), and a raw scratch file `check<N>_findings.md` inside the site folder. They never touch `_audit.md`, `README.md`, or `Outreach.md`.
 - Check-unit 5 (evidence compilation) READS raw check files, writes `check5_evidence_report.md`.
 - Check-unit 6 writes `README.md` and drafts `Outreach.md`.
 - FINAL assembly of `_audit.md` + `_audit.pdf` happens AFTER review confirmation — orchestrated by you (or a dedicated assembler sub-agent dispatched alone), merging only REVIEW-CONFIRMED findings (§8). One writer per file, always.
@@ -293,7 +293,7 @@ Nothing is "done" because a command didn't error. The loop runs on EVERY unit, e
 **Variant-specific requirements (in addition to the loop above):**
 
 - **Auditor variant (checks 1–4):** execute the assigned unit fully — you MUST have read the full SKILL.md of every skill in §2.5 relevant to your check before this unit. Capture evidence at the moment of observation, record the exact raw observation, write the finding with its real evidence references. Never write a finding for content you did not personally observe this unit.
-  - **Full-site crawl — EVERY page, never homepage-only.** First discover the site's complete page list (navigation, sitemap.xml, footer links, internal links), then visit EVERY page: homepage, About (mandatory — team, business story, background), Services/Products, Contact, Blog/News, and any sub-pages or detail pages. Never extract from the homepage alone, and never rely on one or two pages for business info. Data missing from the homepage but present on a deeper page is NOT a finding — you only judge a page after you have actually visited it. Per-page extracted data goes into a per-page JSON file per §6.1.
+  - **Full-site crawl — EVERY page, never homepage-only.** First discover the site's complete page list (navigation, sitemap.xml, footer links, internal links), then visit EVERY page: homepage, About (mandatory — team, business story, background), Services/Products, Contact, Blog/News, and any sub-pages or detail pages. Never extract from the homepage alone, and never rely on one or two pages for business info. Data missing from the homepage but present on a deeper page is NOT a finding — you only judge a page after you have actually visited it. Per-page extracted data goes into a per-page JSON file per §6.3.
   - **Critical extraction sub-step (before any data extraction):** scroll the entire page from top to bottom before extracting any content. After the scroll, extract. Then compare: if the post-scroll extraction yields MORE data than a pre-scroll extraction would have (e.g. more sections, more text, more links), the site has animation-revealed content — flag this as a finding (animation hiding content from AI agents). Extracted data is only valid AFTER a full scroll. Never extract from a pre-scroll page state alone.
   - **Section-scoped screenshots (NOT full-page).** When a finding needs a screenshot, capture the RELEVANT SECTION only — the specific block/element where the problem lives (e.g. the hours block showing the inconsistency, the booking form, the missing pricing section). Size the capture to the section, not to the full page. A full-page screenshot is too tall and impractical for embedding in an outreach email or a report. An exception: if the problem spans the whole page (rendering failure, broken layout), capture that — but the default is section-scoped. For outreach proof shots, a hero section or a representative visual from the site is fine — it doesn't need to show the exact problem location. Screenshots go to `Screenshots/` per §7.
   - **Analyze every screenshot.** After capturing ANY screenshot, immediately inspect it — actually look at the image — for visual problems: broken/overlapped layout, cut-off text, missing images, content that fails to render, sections that look wrong. A screenshot is evidence only after you have analyzed what it shows. Never capture-and-move-on.
@@ -343,7 +343,23 @@ Every site must clear ALL SIX. Checks 1 and 4 are deterministic/tool-driven; che
 3. **Browser Simulation — agentic browsing** (behavioral, Browser Use, runs AFTER the fetch test) — a human's AI assistant driving a real browser: navigate, click, fill, attempt booking/quote/order up to the confirmation boundary. Record where it got and where it failed. Findings here complement (never replace) the fetch-test findings — they document what an assistant CAN discover via browsing that it couldn't via fetch, and vice versa.
 4. **Free-Tool Cross-Verification** (secondary — §9) — run the same categories check 1 covers through available free checker tools, purely to catch anything check 1 missed. Never substitutes for check 1.
 5. **Evidence Compilation & Verification** — for every finding produced by checks 1–4: confirm §8-grade proof exists and is correctly referenced; discard or flag anything short of the bar. Writes `check5_evidence_report.md`.
-6. **Business Profile & Outreach Drafting** — extract the business's own info (name, offerings, prices found, hours, locations, contacts, **tech stack per §6.2**) into `README.md` (§11); draft `Outreach.md` (§12) from confirmed findings only. Sources for this check are the per-page `data/*.json` files (§6.1) — the full business picture comes from ALL pages, never the homepage alone.
+6. **Business Profile & Outreach Drafting** — extract the business's own info (name, offerings, prices found, hours, locations, contacts, **tech stack per §6.2**) into `README.md` (§11); draft `Outreach.md` (§12) from confirmed findings only. Sources for this check are the per-page `data/*.json` files (§6.3) — the full business picture comes from ALL pages, never the homepage alone.
+
+### 6.1 AI Visibility Testing — 4 tiers, fetch-first, mandatory diff
+
+Checks 2 and 3 together form a single AI-visibility investigation with 4 sequential tiers. The entire investigation follows this exact order — fetch-first, then browser, then the live assistant test, and optional free tools last. The ordering matters because each tier checks the next against a known baseline. The **mandatory diff step** (Tier 2 → Tier 1) is where the most important findings are born.
+
+**Tier 1 — Fetch test (what a plain HTTP GET receives).** Fetch the homepage and key pages with a plain HTTP GET (no browser, no JS, no rendering). Store the full raw response in `data/<page>_rawfetch.json`. This is what a real AI assistant's search/fetch tool literally receives. The agent does NOT yet know if this data is complete — that is determined in Tier 2.
+
+**Tier 2 — Browser test (the complete baseline).** Full browser rendering (Browser Use), scroll all pages, extract all visible content. Store the complete extraction in per-page `data/<page>.json` (§6.3). This is the "ground truth" — the full set of information the site makes available to a human.
+
+**→ MANDATORY DIFF: Tier 1 vs Tier 2 (produces findings).** Compare what the fetch received vs what the browser found. Every piece of information present in the browser baseline but absent from the fetch response is a genuine finding: "AI assistants cannot see this information." This diff is the core of the audit — it is what proves the business is losing AI traffic. The agent must NOT ignore fetch gaps just because it has the full picture from browsing — the gap IS the finding. Mark each gap with: what was missing, which page, the fetch evidence (truncated/json/stripped), and the browser evidence (visible). The diff is mandatory and non-negotiable: having the full picture from Tier 2 does NOT excuse the gaps in Tier 1 — the gaps are the whole point of the audit.
+
+**Tier 3 — Live AI assistant test (ChatGPT + Gemini).** Using Browser Use, navigate to the web interfaces of ChatGPT and Gemini (no authentication needed — the free/landing pages accept prompts without login). For each, enter a prompt like: "Fetch everything you can about [domain] — tell me their services, prices, hours, location, contact info, and how to book." Wait for the response. **Screenshot the response.** Then compare the AI's answer against the known-complete baseline from Tier 2. Any information the AI assistant missed or got wrong = a real finding, documented with the screenshot as Gate-1 evidence. This tier also produces the single most persuasive piece of evidence for the outreach email and the client report: a screenshot of ChatGPT or Gemini giving incomplete/wrong information about their own business.
+
+**Tier 4 — Free-tool cross-check (optional, §9).** Runs the same categories through free checker tools. This tier is secondary — if it fails (rate limit, paywall), skip without blocking the run. The native fetch/browser tests (Tiers 1–3) are the primary evidence.
+
+**Ordering rule — fetch-first by design.** Tier 1 runs first so the fetch result is captured without any prior knowledge bias. The concern that "the agent doesn't know if the fetch data is complete" is solved by the diff step — completeness is determined AFTER Tier 2, not during Tier 1. The alternative ordering (browser first) risks the agent subconsciously ignoring fetch gaps because it already has the full data — the mandatory diff exists precisely to prevent this, but starting with fetch eliminates the risk entirely. Never reverse the order.
 
 ### 6.2 Tech-stack identification (mandatory, every site)
 
@@ -353,7 +369,7 @@ Every site's README must state the technology the website is built with — the 
 
 **Output — one line in README `## Business Basics`:** `- **Tech Stack:** <detected platform/framework — e.g. "WordPress (with Elementor)", "Next.js (custom build)", "Shopify", "Webflow", "Static HTML", "Unknown — custom build">`. If genuinely undetectable, write `Unknown — appears custom-built` — never guess.
 
-### 6.1 Per-page data collection (mandatory, all checks)
+### 6.3 Per-page data collection (mandatory, all checks)
 
 Every check operates across ALL pages of the site — never the homepage alone. The auditor first discovers the full site map: navigation, sitemap.xml, footer links, and any internal links found on the homepage and all subsequent pages. Then visits every discovered page.
 
@@ -400,13 +416,13 @@ example-clinic-com/
 ├── Screenshots/
 │   └── <domain>_check<N>_<seq>.png  ← every evidence image, referenced by findings
 └── data/
-    ├── homepage.json                ← all data extracted from the homepage (§6.1)
+    ├── homepage.json                ← all data extracted from the homepage (§6.3)
     ├── about.json                   ← all data extracted from the About page
     ├── services.json                ← all data extracted from the Services page
     └── <page-name>.json             ← one JSON per discovered page
 ```
 
-Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.1 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more. **`worklog.md` is also a first-class deliverable** — it sits at the zip root, separate from the site folders (§15).
+Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.3 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more. **`worklog.md` is also a first-class deliverable** — it sits at the zip root, separate from the site folders (§15).
 
 **PRIVACY — the ledger repo must NEVER contain client site data.** `README.md` (business dossier) is the ONLY file that carries sensitive client info — emails, phone numbers, owner names, addresses. That means: README.md and every other site artifact (audit files, Outreach, Screenshots, data/) are packaged into `Deliverables.zip` and delivered to YOU privately, but they are NEVER committed or pushed to the GitHub ledger repo. The ledger holds only `PROGRESS.md` (domains + outcomes, no PII) and this repo's own README. The ledger's `.gitignore` enforces this; you must never override it, never `git add -f` a site file, and never stage anything but `PROGRESS.md` (§14.3).
 
@@ -447,7 +463,7 @@ Consistency IS the product: a client comparing two reports must find the same st
 
 ### 10.2 Evidence references must be real
 
-Every `Evidence:` line in the report references files that actually exist in that site's folder. Screenshots must be present under `Screenshots/`; any raw-capture file referenced must also be shipped in the same folder. Evidence may also reference the per-page `data/<page>.json` file (§6.1) that contains the raw extracted data from the page where the finding was observed. A reference to a file that doesn't exist invalidates the finding's evidence — that finding does not ship. The client report must NOT contain a "Files in this site folder" inventory section (§4.3); all evidence references are inline per finding only.
+Every `Evidence:` line in the report references files that actually exist in that site's folder. Screenshots must be present under `Screenshots/`; any raw-capture file referenced must also be shipped in the same folder. Evidence may also reference the per-page `data/<page>.json` file (§6.3) that contains the raw extracted data from the page where the finding was observed. A reference to a file that doesn't exist invalidates the finding's evidence — that finding does not ship. The client report must NOT contain a "Files in this site folder" inventory section (§4.3); all evidence references are inline per finding only.
 
 ### 10.3 No internal jargon in client-facing files
 
@@ -691,7 +707,7 @@ Deliverables.zip
 - [ ] Every folder contains exactly the 6 required items — 2 report files + README + Outreach + Screenshots/ + data/ (one JSON per page); zero stray/raw files anywhere in the zip; `data/` contains only page JSONs (no leftovers like `_session_start_utc.txt`) (§9)
 - [ ] Every `.pdf` opens and matches its `.md` core content — AND is a genuinely rendered PDF (reasonable size for its finding count, page count present, screenshots embedded). A stub PDF (e.g. 70 KB for 15 findings) fails (§10)
 - [ ] Every finding's referenced screenshot exists in that folder's `Screenshots/`
-- [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
+- [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.3)
 - [ ] No sub-worklogs, no screening notes, no temp artifacts in the zip — BUT `worklog.md` IS present at the zip root and is non-empty (a zip without worklog.md is incomplete) (§15)
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
 - [ ] Privacy check: NO client site data (README.md, audit files, screenshots, data/*.json, or raw emails/phones/names/addresses) appears in the ledger repo or in any `PROGRESS_update_…` file — only the dedup rows (§9, §14.2, §14.3)
