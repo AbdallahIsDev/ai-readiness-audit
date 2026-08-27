@@ -1,7 +1,3 @@
-# Nested repo folder (empty shell, locked by VS Code) - ignore
-ai-readiness-audit-ledger/
-
-# Personal conversation log - not for publication
 session-context.txt
 
 # Local re-audit queue - kept off GitHub
@@ -21,3 +17,4 @@ skills-lock.json
 *-org/
 *-co/
 AUDIT_EXECUTION_DIRECTIVE.md
+CLOUD_AGENT_WORKFLOW.md
