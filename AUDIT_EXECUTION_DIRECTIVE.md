@@ -29,12 +29,12 @@
 
 ```yaml
 controls:
-  NUMBER_OF_WEBSITES: 20          # total sites to FULLY audit this session. Change this one number to scale the run.
+  NUMBER_OF_WEBSITES: 6          # total sites to FULLY audit this session. Change this one number to scale the run.
   CHECKS_PER_WEBSITE: 6           # FIXED. The six required checks in §7. Not tunable — this is the accuracy floor.
   CANDIDATE_POOL_MULTIPLIER: 2    # screen at least N×NUMBER_OF_WEBSITES candidates before finalizing the audit set (§4.3)
   SUB_AGENT_AUDIT_POOL_SIZE: 10   # concurrent sub-agents during any Audit Wave (resource-bound, decoupled from NUMBER_OF_WEBSITES — §5.2)
   SUB_AGENT_REVIEW_POOL_SIZE: 6   # concurrent sub-agents during any Review Wave
-  NUMBER_OF_WAVES: 10             # alternating Audit/Review waves. MUST be even; if odd, round down, state the adjustment in worklog.md — the run must always END on a Review Wave.
+  NUMBER_OF_WAVES: 6             # alternating Audit/Review waves. MUST be even; if odd, round down, state the adjustment in worklog.md — the run must always END on a Review Wave.
   TARGET_GROUP: 0                 # industry group selector — see §4.1. 0 = draw from ALL groups.
   FIXED_AUDIT_FEE_USD: 500        # tier-1 price for full audit + priority fixes. Report-only: $200. Used verbatim in outreach (§12.4).
   FREE_TOOL_MODE: SECONDARY_ONLY  # FIXED — see override banner above. Not a toggle.
@@ -96,6 +96,7 @@ Using your native task-tracking tool, build the to-do list covering the ENTIRE s
 
 1. Clone ledger repo; load PROGRESS.md exclusion set (§2.1)
 2. Install Browser Use + register + read its skill docs; log mode (nominal/degraded) (§2.3)
+3. Install the skills in §2.5; orchestrator reads them in full (§2.5)
 3. Build candidate pool ≥ NUMBER_OF_WEBSITES × CANDIDATE_POOL_MULTIPLIER; run §4.2 qualification checklist on every candidate; finalize audit set
 4. Initialize per-site folders + coverage matrix for all selected sites
 5. One item per wave: `Wave N — Audit Wave: clear next check-units from queue` / `Wave N — Review Wave: verify prior wave's units`, up to NUMBER_OF_WAVES
@@ -106,7 +107,39 @@ Using your native task-tracking tool, build the to-do list covering the ENTIRE s
 10. Build Deliverables.zip + run the packaging validation checklist (§16)
 11. Write Final Report (§18)
 
-Work the list strictly top-to-bottom. Update statuses as work actually completes, never in a batch. Nothing silently dropped — out-of-scope items get marked with why. Rules bind the agents that act: every rule governing a sub-agent's work is pasted VERBATIM into that sub-agent's prompt text (§5.5) — never assume a sub-agent absorbed the main prompt.
+Work the list strictly top-to-bottom. Update statuses as work actually completes, never in a batch. Nothing silently dropped — out-of-scope items get marked with why. Rules bind the agents that act: every rule governing a sub-agent's work is pasted VERBATIM into that sub-agent's prompt text (§4.5) — never assume a sub-agent absorbed the main prompt.
+
+### 2.5 Skill Dependencies — Install & Read Before Any Work
+
+These skills extend the agent's knowledge with authoritative standards for the exact categories this audit covers. The orchestrator MUST install them at session start, then read EVERY SKILL.md in full — not cherry-picked checkpoints, not summaries, the entire file. Every sub-agent MUST also read the full SKILL.md of every skill relevant to its assigned check-units (§4.5) before starting work.
+
+**Install commands (run in the sandbox at session start):**
+
+```bash
+npx skills add bartwaardenburg/isagentready-skills -y
+npx skills add coreyhaines31/marketingskills@cold-email -y
+npx skills add coreyhaines31/marketingskills@ai-seo -y
+npx skills add lancelin111/crawl4ai-skill@crawl4ai-skill -y
+npx skills add squirrelscan/skills@audit-website -y
+npx skills add duc01226/easyplatform@markdown-to-pdf -y
+```
+
+**What each skill covers — tells you which sub-agents must read it:**
+
+| Skill | Covers | Must be read by |
+|---|---|---|
+| `ai-content-discovery` (full SKILL.md) | robots.txt, AI crawler directives, sitemaps, llms.txt, meta robots, freshness | Auditor sub-agents (check 1) |
+| `structured-data` (full SKILL.md) | JSON-LD, Schema.org types, entity linking, breadcrumbs, FAQ, author markup | Auditor sub-agents (check 1) |
+| `content-semantics` (full SKILL.md) | SSR, heading hierarchy, semantic HTML, ARIA, alt text, forms, keyboard nav | Auditor sub-agents (checks 1–2) |
+| `agent-protocols` (full SKILL.md) | WebMCP, A2A, MCP discovery, OpenAPI, agents.json | Auditor sub-agents (check 1) |
+| `security-trust` (full SKILL.md) | HTTPS, HSTS, CSP, X-Content-Type-Options, frame protection, CORS, Referrer-Policy | Auditor sub-agents (check 4) |
+| `cold-email` (full SKILL.md) | Cold email copywriting, voice/tone, structure, personalization | Copywriter sub-agent (unit 6) |
+| `ai-seo` (full SKILL.md) | AI search visibility, how AI search works, competitive landscape | Copywriter sub-agent (unit 6) |
+| `crawl4ai-skill` (full SKILL.md) | Efficient full-site crawling for data extraction | Auditor sub-agents (check 1, data/*.json) |
+| `audit-website` (full SKILL.md) | General website audit checklists | All auditor sub-agents |
+| `markdown-to-pdf` (full SKILL.md) | Converting markdown to PDF reports | Assembler / orchestrator |
+
+**Reading discipline:** "Read in full" means opening the SKILL.md file from start to end, reading every line. Not skimming, not searching for keywords. The skill files are the authoritative reference for the audit categories — if a sub-agent's finding contradicts a skill's standard, the skill is right and the finding is wrong.
 
 ---
 
@@ -210,7 +243,9 @@ Multiple sub-agents touch the same website across a wave — so file ownership i
 
 Every sub-agent creates `sub-worklog-<N>.md` in the workspace root (`<N>` = number WITHIN its wave, assigned by you in the launch prompt, never self-picked). Same live-editing discipline as `worklog.md`: first step, not last step. On timeout, a continuation sub-agent reads the existing file and APPENDS — never restarts. After each wave you merge summaries into `worklog.md`'s Wave Log and leave originals on disk (they are excluded from `Deliverables.zip`).
 
-### 4.5 Base launch template (every sub-agent prompt starts from this skeleton)
+### 4.5 Base sub-agent launch template (every sub-agent prompt starts from this skeleton)
+
+This template is the **REUSABLE BASE** — every sub-agent prompt, regardless of wave type or role, is built from this skeleton. The orchestrator copies this entire block, then adds the wave-specific instructions (§7.5 / §8.3 / §9.3) and the specific assigned scope. Never send a bare "do X" prompt — sub-agents have zero context beyond what you put in this field.
 
 ```
 You are a sub-agent for the AI-Readiness Audit run, #<N> of <pool size>,
@@ -219,13 +254,19 @@ for <Audit|Review> Wave <wave number>.
 YOUR SCOPE (check-units assigned/pulled): <site × check list>
 YOU MAY WRITE ONLY: <exact paths per §4.3 — everything else is read-only>
 
-REQUIRED READING (before ANY action — confirm completion in your report):
-1. Your embedded rules below (verbatim — binding).
+MANDATORY READING (before ANY action — you MUST read every file listed below
+in full, cover to cover, before starting work):
+1. The full SKILL.md of every skill listed in §2.5 that is relevant to your
+   assigned check-units (see the "Must be read by" column in §2.5).
+   If you are auditing robots.txt, you read the ENTIRE ai-content-discovery
+   SKILL.md. If you are drafting outreach, you read the ENTIRE cold-email
+   and ai-seo SKILL.md.
 2. The target site itself via Browser Use (never assume from memory or prior notes).
+3. Your embedded rules below (verbatim — binding).
 
 EMBEDDED RULES (verbatim, binding):
 <paste: relevant banner(s) — evidence gate / free-tools-secondary / scope /
-resource discipline — PLUS the wave-specific rules block §7.x or §6-review>
+resource discipline — PLUS the wave-specific rules block from §7.x or §6-review>
 
 MANDATORY QUALITY LOOP (self-checklist per §4.6) runs on every unit
 before you return it.
@@ -234,7 +275,7 @@ WHEN DONE, return EXACTLY the format specified for your wave type,
 including sub-worklog-<N>.md reference.
 ```
 
-If a directive must be followed by the agent doing the work, it MUST appear inside that sub-agent's prompt text. No exceptions.
+Every rule governing a sub-agent's work MUST appear inside that sub-agent's prompt text. Never assume the sub-agent has read the main directive — paste every relevant banner, every applicable rule, the required reading list, and the quality loop checklist verbatim into each prompt. The base template above is the minimum; add everything else the sub-agent needs to know.
 
 ### 4.6 Mandatory Quality Loop — every sub-agent, every unit, before returning
 
@@ -255,13 +296,13 @@ Nothing is "done" because a command didn't error. The loop runs on EVERY unit, e
 
 **Variant-specific requirements (in addition to the loop above):**
 
-- **Auditor variant (checks 1–4):** execute the assigned unit fully — capture evidence at the moment of observation, record the exact raw observation, write the finding with its real evidence references. Never write a finding for content you did not personally observe this unit.
+- **Auditor variant (checks 1–4):** execute the assigned unit fully — you MUST have read the full SKILL.md of every skill in §2.5 relevant to your check before this unit. Capture evidence at the moment of observation, record the exact raw observation, write the finding with its real evidence references. Never write a finding for content you did not personally observe this unit.
   - **Full-site crawl — EVERY page, never homepage-only.** First discover the site's complete page list (navigation, sitemap.xml, footer links, internal links), then visit EVERY page: homepage, About (mandatory — team, business story, background), Services/Products, Contact, Blog/News, and any sub-pages or detail pages. Never extract from the homepage alone, and never rely on one or two pages for business info. Data missing from the homepage but present on a deeper page is NOT a finding — you only judge a page after you have actually visited it. Per-page extracted data goes into a per-page JSON file per §6.1.
   - **Critical extraction sub-step (before any data extraction):** scroll the entire page from top to bottom before extracting any content. After the scroll, extract. Then compare: if the post-scroll extraction yields MORE data than a pre-scroll extraction would have (e.g. more sections, more text, more links), the site has animation-revealed content — flag this as a finding (animation hiding content from AI agents). Extracted data is only valid AFTER a full scroll. Never extract from a pre-scroll page state alone.
   - **Full-page screenshots ONLY.** When a finding needs a screenshot, capture the ENTIRE page (full-page capture), never a cropped or custom area. A cropped capture can hide part of the problem; the full page shows everything. Screenshots go to `Screenshots/` per §7.
   - **Analyze every screenshot.** After capturing ANY screenshot, immediately inspect it — actually look at the image — for visual problems: broken/overlapped layout, cut-off text, missing images, content that fails to render, sections that look wrong. A screenshot is evidence only after you have analyzed what it shows. Never capture-and-move-on.
 - **Reviewer variant (Review Waves):** pull a completed unit, IGNORE the auditor's conclusions initially, re-execute the check from scratch, compare results, and classify each finding CONFIRMED / CORRECTED (state the truth) / INCONSISTENT (→ downgraded to "needs manual verification", §8) / DISCARDED (no factual basis) — attaching YOUR OWN fresh evidence for every verdict. Reading the auditor's writeup and agreeing is not review.
-- **Copywriter variant (unit 6):** follow the §12 dual-mind protocol (Owner's-Chair then Salesman), research the business economics per §12.6, draft `Outreach.md`, then run every §12.8 gate item, and hand off only a copy-paste-ready email.
+- **Copywriter variant (unit 6):** you MUST have read the full `cold-email` and `ai-seo` SKILL.md (§2.5) before drafting. Then follow the §12 dual-mind protocol (Owner's-Chair then Salesman), research the business economics per §12.6, draft `Outreach.md`, then run every §12.8 gate item, and hand off only a copy-paste-ready email.
 
 ---
 

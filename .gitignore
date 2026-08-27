@@ -6,3 +6,8 @@ session-context.txt
 
 # Local re-audit queue - kept off GitHub
 REAUDIT_QUEUE.md
+
+# Local skill installs - cloud agent installs its own via §2.5
+.agents/
+.commandcode/
+skills-lock.json
