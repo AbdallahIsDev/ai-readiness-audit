@@ -76,7 +76,8 @@ A reviewer persona that rubber-stamps its team's findings, an auditor persona th
 2. **PRIVACY: the session working directory must be COMPLETELY OUTSIDE the ledger repo clone.** Never create site folders, draft files, or any site artifact inside the cloned ledger directory — the ledger's `.gitignore` blocks accidental commits, but the safest approach is to keep the entire workspace hierarchy separate from the ledger. Clone the ledger, then work in a sibling directory (e.g. `../audit-session-N/`).
 3. Create `worklog.md` immediately — edited continuously after every meaningful step, never written once at the end, append-only. Required sections:
    `Session Goal (Controls used) | Exclusion Set Loaded (Y/N, row count) | Browser Mode | Candidate Pool & Screening Log | Coverage Matrix (§6.6) | Task Plan | Wave Log (one entry per wave: number, type, roster, units claimed/completed, outcome) | Review Wave Findings (tagged by wave) | Completed Sites | Incomplete Sites | Downgraded Findings ("needs manual verification") | Free Tool Failures | Failed Attempts | Important Discoveries | Self-Directed Improvements | Ledger Sync Result`
-3. After every significant append, surface a one-line version in chat too — if the workspace dies mid-session, the chat transcript reconstructs `worklog.md`.
+   **`worklog.md` must be written for a reviewer who was NOT in the session.** It is the ONLY record of how this session was run — what the agent decided and why, what it tried, what failed, what it discovered. The operator reads it after the session to audit the agent's reasoning and find repeated mistakes. Every decision worth making, every failed attempt, every discovery gets a timestamped entry. A sparse worklog is a failed deliverable — it must be detailed enough for a third party to reconstruct the session's thinking.
+4. After every significant append, surface a one-line version in chat too — if the workspace dies mid-session, the chat transcript reconstructs `worklog.md`.
 
 ### 2.3 Browser Use installation (mandatory, once per session)
 
@@ -236,7 +237,7 @@ Multiple sub-agents touch the same website across a wave — so file ownership i
 
 ### 4.4 Sub-agent memory — `sub-worklog-<N>.md`
 
-Every sub-agent creates `sub-worklog-<N>.md` in the workspace root (`<N>` = number WITHIN its wave, assigned by you in the launch prompt, never self-picked). Same live-editing discipline as `worklog.md`: first step, not last step. On timeout, a continuation sub-agent reads the existing file and APPENDS — never restarts. After each wave you merge summaries into `worklog.md`'s Wave Log and leave originals on disk (they are excluded from `Deliverables.zip`).
+Every sub-agent creates `sub-worklog-<N>.md` in the workspace root (`<N>` = number WITHIN its wave, assigned by you in the launch prompt, never self-picked). Same live-editing discipline as `worklog.md`: first step, not last step. On timeout, a continuation sub-agent reads the existing file and APPENDS — never restarts. After each wave you merge summaries into `worklog.md`'s Wave Log and leave originals on disk. **Sub-worklogs are NEVER packaged into `Deliverables.zip`** — only the orchestrator's `worklog.md` (the merged, readable record) is included at the zip root (§15).
 
 ### 4.5 Base sub-agent launch template (every sub-agent prompt starts from this skeleton)
 
@@ -405,7 +406,7 @@ example-clinic-com/
     └── <page-name>.json             ← one JSON per discovered page
 ```
 
-Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.1 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more.
+Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.1 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more. **`worklog.md` is also a first-class deliverable** — it sits at the zip root, separate from the site folders (§15).
 
 **PRIVACY — the ledger repo must NEVER contain client site data.** `README.md` (business dossier) is the ONLY file that carries sensitive client info — emails, phone numbers, owner names, addresses. That means: README.md and every other site artifact (audit files, Outreach, Screenshots, data/) are packaged into `Deliverables.zip` and delivered to YOU privately, but they are NEVER committed or pushed to the GitHub ledger repo. The ledger holds only `PROGRESS.md` (domains + outcomes, no PII) and this repo's own README. The ledger's `.gitignore` enforces this; you must never override it, never `git add -f` a site file, and never stage anything but `PROGRESS.md` (§14.3).
 
@@ -667,8 +668,11 @@ Deliverables.zip
 │   ├── Screenshots/
 │   └── data/
 ├── another-business-com/ …
+├── worklog.md                   ← ALWAYS included — the session's narrative record (§2.2)
 └── PROGRESS_update_<date>.md    ← only if §14.3 push failed
 ```
+
+**`worklog.md` is a first-class deliverable — ALWAYS included in `Deliverables.zip`.** It is the session's narrative record: how the agent thought, what it decided, what it found, what failed, what it changed. It is how the operator reviews a session afterward (to audit the agent's reasoning and spot repeated mistakes). A zip without `worklog.md` is incomplete. It sits at the zip root next to the site folders — never inside a site folder.
 
 ### 15.1 Compression & size discipline (MANDATORY)
 
@@ -680,7 +684,7 @@ Deliverables.zip
 - **Size target (preferable, not a fixed limit):** aim for `Deliverables.zip` to come in under ~10 MB. The final size can't be predicted before compression, so treat this as a guideline, not a hard cap — compress heavily (below), measure, then judge.
 - **If it comes out too large to download:** compress harder BEFORE splitting — drop screenshots to 800px, re-quantize aggressively, strip redundant near-duplicate frames.
 - **Mandatory split once over 10 MB:** if, after maximum compression, the zip is still ≥ 10 MB, split into `Deliverables_1.zip`, `Deliverables_2.zip`, … (each part < 10 MB) by partitioning per-site folders roughly evenly across parts; `PROGRESS_update_…` goes in part 1. Name every part explicitly and state the split in the Final Report. Never ship a single zip the user cannot download.
-- **Integrity verification after compression (mandatory):** after re-zipping, verify the archive opens, the file count matches the source set, folder structure is intact, and every markdown-referenced screenshot path resolves inside the zip. A size win that corrupted data is worthless — a corrupted deliverable is worse than a big one. Compress first, verify second, ship third.
+- **Integrity verification after compression (mandatory):** after re-zipping, verify the archive opens, the file count matches the source set, folder structure is intact, every markdown-referenced screenshot path resolves inside the zip, and `worklog.md` is present at the root. A size win that corrupted data is worthless — a corrupted deliverable is worse than a big one. Compress first, verify second, ship third.
 
 **Packaging validation checklist (run before finalizing; all must pass):**
 - [ ] Folder count == sites that cleared ALL six checks + Review + Assembly this session (NOT `NUMBER_OF_WEBSITES` if the queue didn't clear — §17 governs)
@@ -688,7 +692,7 @@ Deliverables.zip
 - [ ] Every `.pdf` opens and matches its `.md` core content — AND is a genuinely rendered PDF (reasonable size for its finding count, page count present, screenshots embedded). A stub PDF (e.g. 70 KB for 15 findings) fails (§10)
 - [ ] Every finding's referenced screenshot exists in that folder's `Screenshots/`
 - [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
-- [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
+- [ ] No sub-worklogs, no screening notes, no temp artifacts in the zip — BUT `worklog.md` IS present at the zip root and is non-empty (a zip without worklog.md is incomplete) (§15)
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
 - [ ] Privacy check: NO client site data (README.md, audit files, screenshots, data/*.json, or raw emails/phones/names/addresses) appears in the ledger repo or in any `PROGRESS_update_…` file — only the dedup rows (§9, §14.2, §14.3)
 - [ ] PII scan: for every site folder about to ship, scan all files EXCEPT `README.md` for email/phone patterns — any raw client email or phone found outside README.md is a privacy violation; fix before shipping (§11)
@@ -714,7 +718,7 @@ The session is DONE only when ALL of the following hold — evaluated once, hone
 4. Every shipped site has valid `Outreach.md` (§12.8 gate) and `README.md` (§11 spec).
 5. `Deliverables.zip` built and passed the §15 checklist.
 6. Ledger synced per §14.3 with truthful status.
-7. `worklog.md` reflects the real run — including failures, degraded modes, downgraded findings, and skipped candidates.
+7. `worklog.md` reflects the real run — including failures, degraded modes, downgraded findings, and skipped candidates — and is included in `Deliverables.zip` at the zip root (§15).
 8. Review coverage is 100% — every shipped site's behavioral findings were independently reproduced; no sample-based review (§7).
 9. Finding-integrity sweep passed: no truncated titles, no topic-mismatched solutions, no duplicate findings, no fabricated dollar-loss figures, no evidence references to nonexistent files (§10.1–§10.3).
 10. PROGRESS.md counts reconciled against actual audit.md findings (§14.2), and the rows are appended to the local PROGRESS.md (not stranded in a `_update` file) (§14.3).
