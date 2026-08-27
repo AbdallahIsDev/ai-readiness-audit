@@ -1,9 +1,9 @@
 # AI-Agent Readiness Audit — Execution Directive v2 (Ultra)
 
 > **LEDGER OVERRIDE — CLONE FIRST, NEVER RE-AUDIT. (NON-NEGOTIABLE)**
-> All audit progress lives in the GitHub repository `https://github.com/AbdallahIsDev/ai-readiness-audit-ledger`. Before ANY other work this session: `git clone https://github.com/AbdallahIsDev/ai-readiness-audit-ledger` and read `PROGRESS.md` in full. Every domain listed there was audited in a prior session — auditing it again is a critical failure. At session end you update `PROGRESS.md` per §14 and attempt to push; if the sandbox has no write credentials, that failure is handled exactly per §14.3 (package the update inside `Deliverables.zip`) — it never blocks or shortens the run.
+> All audit progress lives in the SAME repository as this directive: `https://github.com/AbdallahIsDev/ai-readiness-audit-directive`. Before ANY other work this session: `git clone https://github.com/AbdallahIsDev/ai-readiness-audit-directive` and read `PROGRESS.md` (in the repo root) in full. Every domain listed there was audited in a prior session — auditing it again is a critical failure. At session end you update `PROGRESS.md` per §14 and attempt to push; if the sandbox has no write credentials, that failure is handled exactly per §14.3 (package the update inside `Deliverables.zip`) — it never blocks or shortens the run.
 >
-> **PRIVACY: the ledger repo is PII-free by construction.** Only `PROGRESS.md` (dedup rows, no emails/phones/names/addresses) is ever pushed to GitHub. All client-sensitive data — emails, phones, owner names, addresses — lives ONLY in each site's local `README.md` (§11), packaged in the private zip, never committed to the ledger (§9, §14.3). Committing any site data to the ledger is a critical failure (§18).
+> **PRIVACY: the repo is PII-free by construction.** Only `PROGRESS.md` (dedup rows, no emails/phones/names/addresses) is ever pushed to GitHub. All client-sensitive data — emails, phones, owner names, addresses — lives ONLY in each site's local `README.md` (§11), packaged in the private zip, never committed (§9, §14.3). Per-site folders are gitignored. Committing any site data is a critical failure (§18).
 
 > **BROWSER TOOL OVERRIDE — BROWSER USE ONLY. (NON-NEGOTIABLE)**
 > The sandbox's built-in browser is DEPRECATED for this run. Before any website is touched, install **Browser Use** (`browser-use/browser-use`, with the self-healing `browser-use/browser-harness` recovery layer) per §2.3, register its skill, READ the registered skill documentation, and route every browser-driven action of this run through it. The built-in browser is a last-resort fallback only after the §2.3 retry procedure fails — and if that happens, the run is logged as DEGRADED MODE in `worklog.md`, never silently substituted.
@@ -40,7 +40,7 @@ controls:
   FREE_TOOL_MODE: SECONDARY_ONLY  # FIXED — see override banner above. Not a toggle.
   BROWSER_ENGINE: BROWSER_USE     # FIXED unless §2.3's degraded-mode path triggers.
   REVIEW_COVERAGE_PCT: 100        # FIXED — every shipped site's behavioral findings must be independently reproduced before packaging. Sample-based review (e.g. "5 of 20") is prohibited.
-  LEDGER_REPO_URL: https://github.com/AbdallahIsDev/ai-readiness-audit-ledger
+  LEDGER_REPO_URL: https://github.com/AbdallahIsDev/ai-readiness-audit-directive
 ```
 
 If you identify a control this task clearly needs that isn't listed, add it, use it, and note the addition in `worklog.md`. Likewise, any self-directed improvement to accuracy, evidence quality, or workflow reliability is welcome — implement it and record it under `## Self-Directed Improvements` in `worklog.md`. This list is a floor, not a ceiling.
@@ -66,14 +66,14 @@ A reviewer persona that rubber-stamps its team's findings, an auditor persona th
 
 ### 2.1 Ledger clone & dedup load (FIRST action of the session)
 
-1. `git clone <LEDGER_REPO_URL>` into the workspace.
+1. `git clone <LEDGER_REPO_URL>` into the workspace (this is the same repo containing the directive and skills).
 2. Read `README.md`, `PROGRESS.md` in full. Build the **exclusion set**: every domain in the table. Lowercase hosts, no scheme, no `www.` — normalize before comparing.
 3. If the repo is unreachable (network policy, first-ever run): proceed WITHOUT it, log the failure prominently in `worklog.md`, and still perform the §15 end-of-session update so future sessions have it. A missing ledger never blocks the run; ignoring the ledger when it exists is a critical failure.
 
 ### 2.2 Workspace & memory setup
 
 1. Create a session working directory. All intermediate work lives there until packaging.
-2. **PRIVACY: the session working directory must be COMPLETELY OUTSIDE the ledger repo clone.** Never create site folders, draft files, or any site artifact inside the cloned ledger directory — the ledger's `.gitignore` blocks accidental commits, but the safest approach is to keep the entire workspace hierarchy separate from the ledger. Clone the ledger, then work in a sibling directory (e.g. `../audit-session-N/`).
+2. **PRIVACY: the session working directory must be COMPLETELY OUTSIDE the repo clone.** Never create site folders, draft files, or any site artifact inside the cloned repo directory — the repo's `.gitignore` blocks per-site folders and accidental commits, but the safest approach is to keep the entire workspace hierarchy separate from the clone. Clone the repo, then work in a sibling directory (e.g. `../audit-session-N/`).
 3. Create `worklog.md` immediately — edited continuously after every meaningful step, never written once at the end, append-only. Required sections:
    `Session Goal (Controls used) | Exclusion Set Loaded (Y/N, row count) | Browser Mode | Candidate Pool & Screening Log | Coverage Matrix (§5.6) | Task Plan | Wave Log (one entry per wave: number, type, roster, units claimed/completed, outcome) | Review Wave Findings (tagged by wave) | Completed Sites | Incomplete Sites | Downgraded Findings ("needs manual verification") | Free Tool Failures | Failed Attempts | Important Discoveries | Self-Directed Improvements | Ledger Sync Result`
    **`worklog.md` must be written for a reviewer who was NOT in the session.** It is the ONLY record of how this session was run — what the agent decided and why, what it tried, what failed, what it discovered. The operator reads it after the session to audit the agent's reasoning and find repeated mistakes. Every decision worth making, every failed attempt, every discovery gets a timestamped entry. A sparse worklog is a failed deliverable — it must be detailed enough for a third party to reconstruct the session's thinking.
@@ -95,7 +95,7 @@ Before auditing any site:
 
 Using your native task-tracking tool, build the to-do list covering the ENTIRE session BEFORE dispatching anything, containing at minimum these items verbatim (plus one item per wave pair):
 
-1. Clone ledger repo; load PROGRESS.md exclusion set (§2.1)
+1. Clone the repo; load PROGRESS.md exclusion set (§2.1)
 2. Install Browser Use + register + read its skill docs; log mode (nominal/degraded) (§2.3)
 3. Install the skills in §2.5; orchestrator reads them in full (§2.5)
 3. Build candidate pool ≥ NUMBER_OF_WEBSITES × CANDIDATE_POOL_MULTIPLIER; run §4.2 qualification checklist on every candidate; finalize audit set
@@ -426,7 +426,7 @@ example-clinic-com/
 
 Raw intermediates (`check<N>_*.md`, sub-worklogs, candidate screening notes) stay in the session workspace OUTSIDE the site folders and are NEVER packaged into `Deliverables.zip`. The `data/*.json` files are NOT raw intermediates — they are first-class deliverables per §6.3 and ARE packaged. Each site folder contains exactly these items: the two report files, README, Outreach, Screenshots/, and data/ — nothing more. **`worklog.md` is also a first-class deliverable** — it sits at the zip root, separate from the site folders (§15).
 
-**PRIVACY — the ledger repo must NEVER contain client site data.** `README.md` (business dossier) is the ONLY file that carries sensitive client info — emails, phone numbers, owner names, addresses. That means: README.md and every other site artifact (audit files, Outreach, Screenshots, data/) are packaged into `Deliverables.zip` and delivered to YOU privately, but they are NEVER committed or pushed to the GitHub ledger repo. The ledger holds only `PROGRESS.md` (domains + outcomes, no PII) and this repo's own README. The ledger's `.gitignore` enforces this; you must never override it, never `git add -f` a site file, and never stage anything but `PROGRESS.md` (§14.3).
+**PRIVACY — the repo must NEVER contain client site data.** `README.md` (business dossier) is the ONLY file that carries sensitive client info — emails, phone numbers, owner names, addresses. That means: README.md and every other site artifact (audit files, Outreach, Screenshots, data/) are packaged into `Deliverables.zip` and delivered to YOU privately, but they are NEVER committed or pushed to GitHub. The repo holds only `PROGRESS.md` (domains + outcomes, no PII) and this repo's own README. The repo's `.gitignore` enforces this; you must never override it, never `git add -f` a site file, and never stage anything but `PROGRESS.md` (§14.3).
 
 ---
 
@@ -669,9 +669,9 @@ Update `Client Responded` / `Client Purchased` in LATER sessions when outcomes a
 ### 14.3 Push-or-package
 
 1. **ALWAYS append the rows to the local `PROGRESS.md` first** — regardless of whether push will succeed. The local file must reflect the current session's output.
-2. Then attempt `git commit && git push`. **ONLY `PROGRESS.md` is ever committed to the ledger — never a site folder, never `README.md`, never any site artifact.** The ledger's `.gitignore` blocks everything except `PROGRESS.md` and the repo's own README (§9); never override it with `git add -f`, never stage site files.
-3. If credentials are absent and push fails: save `PROGRESS_update_<date>.md` (the exact same rows already appended to the local PROGRESS.md, plus any outcome-column updates) at `Deliverables.zip` root, state plainly in the Final Report that the ledger needs a manual push, and include the exact rows. The rows are already in the local PROGRESS.md — the `_update` file is only for the user to copy-paste into GitHub if the local copy can't be pushed.
-4. Never claim "ledger updated" without platform-qualified evidence of WHERE the update lives (pushed to GitHub vs packaged in zip vs workspace-only). If the local PROGRESS.md has the rows but push failed, state: "Rows appended locally; push failed — `PROGRESS_update_<date>.md` in zip for manual merge."
+2. Then attempt `git commit && git push`. **ONLY `PROGRESS.md` is ever committed to the repo — never a site folder, never `README.md`, never any site artifact.** The repo's `.gitignore` blocks per-site folders and everything except `PROGRESS.md` and the repo's own README (§9); never override it with `git add -f`, never stage site files.
+3. If credentials are absent and push fails: save `PROGRESS_update_<date>.md` (the exact same rows already appended to the local PROGRESS.md, plus any outcome-column updates) at `Deliverables.zip` root, state plainly in the Final Report that PROGRESS.md needs a manual push, and include the exact rows. The rows are already in the local PROGRESS.md — the `_update` file is only for the user to copy-paste into GitHub if the local copy can't be pushed.
+4. Never claim "progress updated" without platform-qualified evidence of WHERE the update lives (pushed to GitHub vs packaged in zip vs workspace-only). If the local PROGRESS.md has the rows but push failed, state: "Rows appended locally; push failed — `PROGRESS_update_<date>.md` in zip for manual merge."
 
 ---
 
@@ -715,7 +715,7 @@ Deliverables.zip
 - [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.3)
 - [ ] No sub-worklogs, no screening notes, no temp artifacts in the zip — BUT `worklog.md` IS present at the zip root and is non-empty (a zip without worklog.md is incomplete) (§15)
 - [ ] Ledger state: pushed (link) or packaged (`PROGRESS_update_…` present) or honestly absent-with-reason
-- [ ] Privacy check: NO client site data (README.md, audit files, screenshots, data/*.json, or raw emails/phones/names/addresses) appears in the ledger repo or in any `PROGRESS_update_…` file — only the dedup rows (§9, §14.2, §14.3)
+- [ ] Privacy check: NO client site data (README.md, audit files, screenshots, data/*.json, or raw emails/phones/names/addresses) appears in the repo or in any `PROGRESS_update_…` file — only the dedup rows (§9, §14.2, §14.3)
 - [ ] PII scan: for every site folder about to ship, scan all files EXCEPT `README.md` for email/phone patterns — any raw client email or phone found outside README.md is a privacy violation; fix before shipping (§11)
 - [ ] Zip built with real compression — never `store` method (§15.1)
 - [ ] Zip size preferably under ~10 MB; if larger, compress harder or split — never undownloadable
@@ -784,6 +784,6 @@ Violation of any of the following is a CRITICAL FAILURE of the run, regardless o
 - Shipping a site whose behavioral findings lack independent reproduction (sample-based review) (§7).
 - Shipping an Outreach.md with an unfilled To:, a domain-as-brand name, zero business-specific detail, the banned "Reply 'send it'" CTA, or fabricated pricing (§12).
 - Shipping any client-facing file containing internal jargon (Check N, severity labels, audit method, section references) instead of plain English (§10.3).
-- Committing or pushing ANY client site data — site folders, README.md, audit files, screenshots, data/*.json, or any raw contact PII (emails, phones, names, addresses) — to the GitHub ledger repo. Only `PROGRESS.md` may be pushed (§9, §14.3).
+- Committing or pushing ANY client site data — site folders, README.md, audit files, screenshots, data/*.json, or any raw contact PII (emails, phones, names, addresses) — to GitHub. Only `PROGRESS.md` may be pushed (§9, §14.3).
 - Packaging a partial site, stray files, or skipping the §15 validation checklist.
 - Stopping before the single stopping condition of §5.5, or hiding incompletion instead of reporting it (§16).

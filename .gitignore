@@ -1,14 +1,23 @@
-# Nested repo — has its own origin
+# Nested repo folder (empty shell, locked by VS Code) - ignore
 ai-readiness-audit-ledger/
 
-# Personal conversation log — not for publication
+# Personal conversation log - not for publication
 session-context.txt
 
 # Local re-audit queue - kept off GitHub
 REAUDIT_QUEUE.md
 
 # Local skill installs - the shipped skills live in skills/ (committed)
-# .agents/ and .commandcode/ are local install artifacts, not committed
 .agents/
 .commandcode/
 skills-lock.json
+
+# CLIENT DATA - per-site folders from audit sessions contain client PII
+# (emails, phones, names, addresses) and are FORBIDDEN from GitHub.
+# These are named after domains (e.g. exampleclinic-com/) and are ONLY
+# delivered inside Deliverables.zip, never committed.
+*-com/
+*-net/
+*-org/
+*-co/
+AUDIT_EXECUTION_DIRECTIVE.md
