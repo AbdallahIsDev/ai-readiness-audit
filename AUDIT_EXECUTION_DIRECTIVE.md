@@ -284,7 +284,7 @@ Nothing is "done" because a command didn't error. The loop runs on EVERY unit, e
    - **Topic match** — the Solution addresses the SAME topic as the Description. A booking-flow finding never gets an HTTPS/SSL solution; a security-header finding gets that header's fix.
    - **Impact is per-topic** — the impact statement names the real consequence of THIS finding type. The boilerplate "prevents AI assistants from surfacing your business… funneling that booking to a competitor" is banned as a copy-paste, especially on findings (e.g. missing security headers) where that is not the actual mechanism.
    - **Strength vs defect** — something that demonstrably works (reachable booking form, readable pricing, correct structured data) is labeled a Strength, or — if kept as a finding — its Solution PRESERVES the working behavior. It is never shipped as a defect whose solution demands it be "added."
-   - **No duplicates** — the same root cause (e.g. missing hours, missing pricing) discovered by more than one check is ONE finding that records every corroborating check; it is never shipped as two findings.
+   - **No duplicates** — the same root cause (e.g. missing hours, missing pricing) discovered by more than one check is ONE finding that records every corroborating check; it is never shipped as two findings. This includes NEAR-duplicates: two findings describing the same underlying defect from slightly different angles (e.g. two services sharing one wrong page title) must be merged into one, or clearly differentiated by distinct root cause.
    - **Evidence references are real** — every `Evidence:` line points to a file that exists in that site's folder.
 5. **Self-adversarial pass** — "what would a Red Team reviewer flag here?" Fix weaknesses NOW.
 6. Only then mark done and hand off. A sub-agent that skips its loop hands off measurably worse work — the loop is mandatory, not advisory.
@@ -348,7 +348,7 @@ Every check operates across ALL pages of the site — never the homepage alone. 
 
 For each page visited, all extracted data — text content, discovered links, structured data, media references, hours, prices, team info — is written to a per-page JSON file stored in the site folder's `data/` directory (§9). File naming: `<page-name>.json` (e.g. `homepage.json`, `about.json`, `services.json`, `contact.json`, `blog.json`). These JSON files are FIRST-CLASS deliverables, not raw intermediates — they are included in `Deliverables.zip` and serve as the machine-readable evidence foundation for every finding. Every finding's Description/Evidence should reference which page produced it.
 
-**PRIVACY:** `data/*.json` files must NOT contain raw contact PII (emails, phone numbers, owner names, full addresses). Store those in `README.md` only (§11), which is the designated sensitive-info file. The per-page JSONs capture business data for evidence — services, prices, hours, structured-data markup, page content — but contact details belong exclusively in the README.
+**PRIVACY:** `data/*.json` files must NOT contain raw contact PII (emails, phone numbers, owner names, full addresses). Store those in `README.md` only (§11), which is the designated sensitive-info file. The per-page JSONs capture business data for evidence — services, prices, hours, structured-data markup, page content — but contact details belong exclusively in the README. **The `data/` folder contains ONLY per-page JSON files** — no stray files like `_session_start_utc.txt`, no raw HTML dumps beyond what a page JSON naturally holds, no leftovers. Audit every file in `data/` before shipping; anything that isn't a clean page/data file is removed.
 
 ---
 
@@ -422,7 +422,7 @@ No "Severity:" line in the client report. No "Check source:" line. No "Reproduct
 
 The one place a researched dollar figure MAY appear is the left-on-table estimate per §12.6 — in the Executive Summary and/or the Outreach body, always phrased as a conservative approximate estimate, never as exact accounting. There is NO fabricated/unresearched loss-estimate anywhere in the client deliverables.
 
-PDF generation: render from the `.md` (pandoc → weasyprint → wkhtmltopdf → headless Chromium `--print-to-pdf` fallback chain; the Browser Use environment ships Chromium, so a path always exists). PDF layout adapts to the format (cover header, page breaks between findings, screenshots embedded at referenced points) while core content stays identical to the Markdown. If every PDF path somehow fails, ship HTML print-ready + log it — but try the chain first.
+PDF generation: render from the `.md` (pandoc → weasyprint → wkhtmltopdf → headless Chromium `--print-to-pdf` fallback chain; the Browser Use environment ships Chromium, so a path always exists). PDF layout adapts to the format (cover header, page breaks between findings, screenshots embedded at referenced points) while core content stays identical to the Markdown. If every PDF path somehow fails, ship HTML print-ready + log it — but try the chain first. **After generating, VERIFY the PDF actually renders**: open it (or check page count + text extraction) and confirm every finding appears, screenshots embed, and the file is a reasonable size — a 70 KB "audit PDF" for a 15-finding report is a red flag that the PDF is a stub, not a real render. Fix or regenerate before shipping; a broken PDF is a broken deliverable.
 
 Consistency IS the product: a client comparing two reports must find the same structure, same subsection order, solution-last discipline everywhere.
 
@@ -442,7 +442,7 @@ Every `Evidence:` line in the report references files that actually exist in tha
 
 Client-facing files (`_audit.md`, `_audit.pdf`, `README.md`, `Outreach.md`) are for the BUSINESS OWNER — not for you, not for the engineer who requested the audit. Apply these rules to every client-facing file:
 
-- **Banned terms** (translate to plain English or remove): "Check 1", "Check 2", "Check 3", "Check 4", "Check source", "Reproduction", "Gate-2", "needs manual verification", "downgraded", "Review Wave", "Audit Wave", "industry group G2", "orchestrator-direct", "degraded mode", "Browser Use", "§10", "§13.4", "per §7", "severity", "Critical/High/Medium/Low severity labels", "findings shipped to client", "findings downgraded".
+- **Banned terms** (translate to plain English or remove): "Check 1", "Check 2", "Check 3", "Check 4", "Check source", "Reproduction", "Gate-2", "needs manual verification", "downgraded", "Review Wave", "Audit Wave", "industry group G2", "orchestrator-direct", "degraded mode", "Browser Use", "§10", "§13.4", "per §7", "severity", "Critical/High/Medium/Low severity labels", "findings shipped to client", "findings downgraded", "census", "probe", "walkthrough", "host surface", "nojs" (as a client-visible filename), "ROI", "KPI", "vendor".
 - **Legitimate technical terms are NOT banned** — `robots.txt`, `JSON-LD`, `schema.org`, and `llms.txt` are real findings, not internal jargon. When one is the actual subject of a finding (e.g. "robots.txt blocks AI crawlers"), name it directly — precise terminology is what makes the report credible. Ban only the internal-workflow jargon above, never the technical substance of the audit.
 - **Fail: "See Check 3 if reachable"** → succeed: embed the screenshot directly or link to `Screenshots/<filename>.png`.
 - **Fail: "Not extracted. See Check 2 robots.txt"** → succeed: state the fact in plain English ("No social media links found on the homepage" or add the actual links if found).
@@ -496,7 +496,7 @@ Every reference to another finding, section, or file from within a client-facing
 <2–4 bullets of genuinely specific, personalization-worthy facts: an award, a specialty, years in business, a unique offering, a named team member with a story. Every fact must be real and verifiable on the site.>
 
 ## Source URLs
-- <URL of each page where the facts above were found>
+- <live page URL of each page where the facts above were found — the actual https:// URL of the site page, NOT an internal file path>
 ```
 
 ### 11.1 Dossier field discipline
@@ -506,7 +506,8 @@ Every reference to another finding, section, or file from within a client-facing
 - **Every field that yields nothing is written as `None` — never left blank, never filled with a placeholder like "(see homepage)", never skipped.** If the site has no address, the field says `None`. If it has an address, it is written out in full.
 - **Social media and team info require a FULL page scroll before you declare them absent** (§4.6). These are the fields most often hidden in footers and animation-revealed sections — the single most common extraction failure is reporting "None" when the data was just below the fold. Check the footer and the entire page height first.
 - **Emails are validated before writing.** Each extracted email must pass a sanity check: no stray leading/trailing characters (e.g. a spurious leading "n"), well-formed `local@domain.tld`, and cross-checked against visible contact text on the site. A corrupted email is fixed or marked unverified — never shipped corrupted.
-- **Source URLs point to real paths** relative to the workspace root; no invented `sites/` prefix.
+- **Source URLs are LIVE page URLs, never file paths.** The `## Source URLs` section lists the actual website pages where facts were found (e.g. `https://example.com/contact-us/`), NOT internal file paths. Never write `sites/<domain>/data/...` or `data/...` or any workspace-relative path — the client does not have your filesystem. Each fact's source is one or more real https:// URLs.
+- **Every file reference in the README must resolve.** If the README references any screenshot or data file (e.g. in Notable Facts or elsewhere), that file must exist in this site's folder. A reference to a nonexistent file (wrong range, stale path) is a defect — verify each referenced path exists before shipping.
 - **About the Business is a summary you write**, not a paste. Read the site, understand it, then write 1–3 clean sentences in your own words. Raw homepage text copied into the field is a failed field.
 - **Grammar:** no article errors ("a independent" → "an independent"), no subject-verb mismatches, no orphaned fragments, no double spaces.
 - **No duplicated facts within the same file.** Each fact appears once. (The domain appears once in Business Basics, not again in Source URLs; the phone appears once in Contact Channels, not three times.)
@@ -574,9 +575,9 @@ Before writing the email, the copywriter must understand THIS business's money �
 3. **Compute the left-on-table number.** `(estimated lost clients per month) × (average revenue per client)`. The result is an APPROXIMATE annual figure. It is explicitly an estimate — reasonable, defensible, never exact.
 4. **Sanity-check against the business type.** An electrician losing a single client is losing thousands (average job value), so a $1,000 "annual loss" figure for a trade business is implausible — flag and correct such numbers. The number must feel true for THIS industry, not formulaic.
 
-**Where it goes:** the left-on-table number appears in the Outreach body (§12.4 point 3, replacing the old fabricated figure) and MAY appear once in the audit Executive Summary — always phrased as an approximate estimate ("conservatively, this likely costs you around $X/year in lost jobs"), never as an exact accounting. The number's only job: make the modest fix fee ($500) look trivial next to the money at stake.
+**Where it goes:** the left-on-table number appears in the Outreach body (§12.4 point 3, replacing the old fabricated figure) and MAY appear once in the audit Executive Summary — always phrased as an approximate estimate ("conservatively, this likely costs you around $X/year in lost jobs"), never as an exact accounting. **The reasoning must be visible, not just the number.** In both the Executive Summary and the Outreach, show the chain inline — e.g. "at an average job value of ~$X, one lost client a month is ~$X × 12 ≈ $X/year" — so the reader can see the number is derived, not invented. A number with no visible reasoning reads as fabricated.
 
-**Truthfulness bar:** the estimate must be traceable to (a) industry-average research the copywriter actually performed, and (b) a conservative reasoning chain. It must never be a rounded-up guess, never "severity-weighted formula" output, never a number invented to impress. If the copywriter cannot build a defensible estimate, it omits the number rather than fabricating one.
+**Truthfulness bar:** the estimate must be traceable to (a) industry-average research the copywriter actually performed, and (b) a conservative reasoning chain that is WRITTEN OUT in the deliverable next to the number. It must never be a rounded-up guess, never "severity-weighted formula" output, never a number invented to impress. If the copywriter cannot build a defensible estimate with a visible chain, it omits the number rather than fabricating one. Consistency: the SAME figure appears in the audit Executive Summary and the Outreach — a precise number in Outreach that contradicts the audit's range is a defect.
 
 ### 12.7 Truthfulness constraints (hard)
 
@@ -587,13 +588,15 @@ Every claim traces to a CONFIRMED finding in that site's report. No invented urg
 An outreach draft ships only after the §4.6 copywriter variant + this gate pass ALL of the following:
 - `To:` is present as the local README reference (never empty, never a fake/placeholder email; the real recipient lives in README.md per §12.2).
 - The §12.1 Owner's-Chair interrogation was actually performed and its answers recorded in the sub-worklog.
-- The real trade name is used in the subject/hook — never the raw domain as a fake brand (§12.3).
+- The real trade name is used in the subject AND hook — never the raw domain as a fake brand, never a subject with no business name at all (§12.3).
+- **The stated problem count in the email EXACTLY equals the shipped finding count in that site's `_audit.md`** — count from the audit file, write that number, verify it matches. A mismatch (e.g. email says 9, report ships 11) is a critical error (§12.4, §14.2).
 - ≥2 unique personalization details from README facts, including at least ONE genuine technical/business detail from the audit evidence (booking platform by name, a widget, a service quirk) — not just domain/city substitutions (§12.4).
 - Proof present: the email states the confirmed problem count and, where a visible problem exists, embeds ONE screenshot of it (§12.4 point 3).
-- If a left-on-table figure is included, the §12.6 research pass was actually performed and is traceable (industry-average source + conservative reasoning recorded in the sub-worklog); otherwise no figure was invented (§12.6).
-- CTA is the honest direct alternative — the banned "Reply 'send it'..." phrasing is never used (§12.4 point 5).
+- If a left-on-table figure is included, the §12.6 research pass was actually performed, its reasoning is written out inline, and the figure matches the audit's Executive Summary (§12.6); otherwise no figure was invented.
+- CTA is the honest direct alternative — the banned "Reply 'send it'..." phrasing is never used, and near-variants like "just reply and I'll send it" are also avoided in favor of "Let me know and I'll email the full list." (§12.4 point 5).
 - Pricing is the two-tier structure: full audit + fixes at `$FIXED_AUDIT_FEE_USD`, report-only at `$200` — no "fixing is extra" framing (§12.4 point 4).
-- Zero banned words; ≤150 words; correct grammar (no "a independent" errors); single CTA; no fabricated dollar-loss figures (§12.7).
+- **Word count is STRICTLY ≤150** — count the body words and verify; 150 exactly is borderline, aim for 120–145 (§12.4).
+- Zero banned words; correct grammar (no "a independent" errors); single CTA; no fabricated dollar-loss figures (§12.7).
 - Every factual claim is traceable to a confirmed finding (§12.7).
 - Final gut test answers YES to "would I, sitting in this owner's chair, reply to this?"
 
@@ -632,7 +635,10 @@ Update `Client Responded` / `Client Purchased` in LATER sessions when outcomes a
 
 ### 14.3 Push-or-package
 
-Attempt `git commit && git push` of the updated `PROGRESS.md`. **ONLY `PROGRESS.md` is ever committed to the ledger — never a site folder, never `README.md`, never any site artifact.** The ledger's `.gitignore` blocks everything except `PROGRESS.md` and the repo's own README (§9); never override it with `git add -f`, never stage site files. If credentials are absent and push fails: save `PROGRESS_update_<date>.md` (the new rows + any outcome-column updates) at `Deliverables.zip` root, state plainly in the Final Report that the ledger needs a manual push, and include the exact rows to paste. Never claim "ledger updated" without platform-qualified evidence of WHERE the update lives (pushed to GitHub vs packaged in zip vs workspace-only).
+1. **ALWAYS append the rows to the local `PROGRESS.md` first** — regardless of whether push will succeed. The local file must reflect the current session's output.
+2. Then attempt `git commit && git push`. **ONLY `PROGRESS.md` is ever committed to the ledger — never a site folder, never `README.md`, never any site artifact.** The ledger's `.gitignore` blocks everything except `PROGRESS.md` and the repo's own README (§9); never override it with `git add -f`, never stage site files.
+3. If credentials are absent and push fails: save `PROGRESS_update_<date>.md` (the exact same rows already appended to the local PROGRESS.md, plus any outcome-column updates) at `Deliverables.zip` root, state plainly in the Final Report that the ledger needs a manual push, and include the exact rows. The rows are already in the local PROGRESS.md — the `_update` file is only for the user to copy-paste into GitHub if the local copy can't be pushed.
+4. Never claim "ledger updated" without platform-qualified evidence of WHERE the update lives (pushed to GitHub vs packaged in zip vs workspace-only). If the local PROGRESS.md has the rows but push failed, state: "Rows appended locally; push failed — `PROGRESS_update_<date>.md` in zip for manual merge."
 
 ---
 
@@ -667,8 +673,8 @@ Deliverables.zip
 
 **Packaging validation checklist (run before finalizing; all must pass):**
 - [ ] Folder count == sites that cleared ALL six checks + Review + Assembly this session (NOT `NUMBER_OF_WEBSITES` if the queue didn't clear — §17 governs)
-- [ ] Every folder contains exactly the 6 required items — 2 report files + README + Outreach + Screenshots/ + data/ (one JSON per page); zero stray/raw files anywhere in the zip
-- [ ] Every `.pdf` opens and matches its `.md` core content
+- [ ] Every folder contains exactly the 6 required items — 2 report files + README + Outreach + Screenshots/ + data/ (one JSON per page); zero stray/raw files anywhere in the zip; `data/` contains only page JSONs (no leftovers like `_session_start_utc.txt`) (§9)
+- [ ] Every `.pdf` opens and matches its `.md` core content — AND is a genuinely rendered PDF (reasonable size for its finding count, page count present, screenshots embedded). A stub PDF (e.g. 70 KB for 15 findings) fails (§10)
 - [ ] Every finding's referenced screenshot exists in that folder's `Screenshots/`
 - [ ] Spot-check: 3 random `Outreach.md` files pass §12.8's gate; 3 random reports follow the §10 template exactly; each random report's `data/` folder contains a JSON per page covered by that site's findings (§6.1)
 - [ ] No sub-worklogs, no worklogs, no screening notes, no temp artifacts in the zip
@@ -681,8 +687,9 @@ Deliverables.zip
 - [ ] PROGRESS.md Notes counts match each site's actual shipped-finding count (§14.2)
 - [ ] No finding references a file that doesn't exist; no false "Files in this site folder" inventory (§10.2)
 - [ ] Finding-integrity spot check (3 random reports): titles not truncated, Solution topic matches Description, no duplicate findings, no fabricated dollar-loss figures, impact is per-topic (§10.1/§10.3)
-- [ ] Client-audience spot check (3 random reports + 3 READMEs): no internal jargon (Check N, severity labels, audit method, section references), About written as a summary not a paste, fields filled or "None" (§10.3, §11)
-- [ ] Outreach spot check (3 random): To: filled, real trade name used, ≥1 technical business-specific detail, left-on-table figure (if present) traceable to §12.6 research (§12.8)
+- [ ] Client-audience spot check (3 random reports + 3 READMEs): no internal jargon (Check N, severity labels, audit method, section references, census/probe/walkthrough/nojs), About written as a summary not a paste, fields filled or "None" (§10.3, §11)
+- [ ] Outreach spot check (3 random): To: filled, real trade name in subject AND hook, problem count equals the audit.md shipped count, ≤150 words, left-on-table figure (if present) shows its reasoning inline and matches the audit's Executive Summary, CTA avoids near-scam phrasing (§12.8)
+- [ ] README Source URLs are live https:// page URLs — no `sites/` prefixes, no internal file paths, no references to nonexistent files (§11.1)
 
 ---
 
@@ -699,8 +706,9 @@ The session is DONE only when ALL of the following hold — evaluated once, hone
 7. `worklog.md` reflects the real run — including failures, degraded modes, downgraded findings, and skipped candidates.
 8. Review coverage is 100% — every shipped site's behavioral findings were independently reproduced; no sample-based review (§7).
 9. Finding-integrity sweep passed: no truncated titles, no topic-mismatched solutions, no duplicate findings, no fabricated dollar-loss figures, no evidence references to nonexistent files (§10.1–§10.3).
-10. PROGRESS.md counts reconciled against actual audit.md findings (§14.2).
-11. Client-audience check passed: no internal jargon in any client-facing file (§10.3); every README follows the §11 template; outreach passes the full §12.8 gate including §12.6 left-on-table research traceability.
+10. PROGRESS.md counts reconciled against actual audit.md findings (§14.2), and the rows are appended to the local PROGRESS.md (not stranded in a `_update` file) (§14.3).
+11. Client-audience check passed: no internal jargon in any client-facing file (§10.3); every README follows the §11 template (including live-page Source URLs and no nonexistent file references); outreach passes the full §12.8 gate (including finding-count consistency, ≤150 words, subject with real trade name, and §12.6 left-on-table research with inline reasoning).
+12. Every shipped site's Outreach problem count equals its audit.md shipped finding count (§12.8).
 
 If wave budget ran out before clearing the queue, that is stated PLAINLY in the Final Report as current state — which sites completed, which didn't and why, and the concrete recommendation (bigger pools / more waves / fewer sites) for next session. Honest incompletion is acceptable; hidden incompletion and trimmed audits are critical failures.
 
