@@ -19,5 +19,5 @@ CLOUD_AGENT_WORKFLOW.md
 # README.md anywhere — i.e., all site dossiers. The ROOT README.md of this repo
 # is already tracked, and gitignore never untracks tracked files, so it stays
 # on GitHub and keeps updating normally. Site folders themselves (audit files,
-# PDFs, Outreach, Screenshots, data/) ARE pushed as progress backup.
+# PDFs, Outreach, Evidence, data/) ARE pushed as progress backup.
 README.md
