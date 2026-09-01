@@ -1,3 +1,4 @@
+# Personal conversation log - not for publication
 session-context.txt
 
 # Local re-audit queue - kept off GitHub
@@ -8,13 +9,15 @@ REAUDIT_QUEUE.md
 .commandcode/
 skills-lock.json
 
-# CLIENT DATA - per-site folders from audit sessions contain client PII
-# (emails, phones, names, addresses) and are FORBIDDEN from GitHub.
-# These are named after domains (e.g. exampleclinic-com/) and are ONLY
-# delivered inside Deliverables.zip, never committed.
-*-com/
-*-net/
-*-org/
-*-co/
+# The directive & workflow stay LOCAL ONLY (per operator decision)
 AUDIT_EXECUTION_DIRECTIVE.md
 CLOUD_AGENT_WORKFLOW.md
+
+# CLIENT PII PROTECTION:
+# Every per-site business dossier is named README.md (emails, phones, owner
+# names, addresses live ONLY there). This blanket rule blocks every untracked
+# README.md anywhere — i.e., all site dossiers. The ROOT README.md of this repo
+# is already tracked, and gitignore never untracks tracked files, so it stays
+# on GitHub and keeps updating normally. Site folders themselves (audit files,
+# PDFs, Outreach, Screenshots, data/) ARE pushed as progress backup.
+README.md

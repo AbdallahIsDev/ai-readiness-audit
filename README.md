@@ -28,10 +28,10 @@ The complete operating kit for running **AI-Agent Readiness Audits** on small lo
 
 ## Privacy model
 
-- This repo holds the directive, the workflow reference, the dedup registry, and the skills — **no client data**.
-- Per-website business dossiers (README.md files with client contact PII) live only in `Deliverables.zip`, never on GitHub.
-- Per-site folders (named after domains) are gitignored and never committed — `.gitignore` blocks `*-com/`, `*-net/`, `*-org/`, `*-co/`.
-- `PROGRESS.md` (dedup rows, no PII) is the only per-client-adjacent file that is pushed.
+- The ONLY client-sensitive file is each site's `README.md` business dossier (emails, phones, owner names, addresses). A blanket `.gitignore` rule blocks every untracked `README.md`, so dossiers never reach GitHub — they are delivered only inside `Deliverables.zip`.
+- Everything else in the per-site folders (audit reports, PDFs, Outreach, Screenshots, data/) IS committed and pushed to GitHub as durable progress backup. These files carry no raw contact PII by directive (§11 of the audit directive), and a mandatory PII scan verifies that before shipping.
+- This repo's own root `README.md` is tracked, so the blanket rule does not affect it — it keeps updating normally.
+- `PROGRESS.md` (dedup rows, no PII) is pushed alongside the site folders.
 
 ## Usage
 
