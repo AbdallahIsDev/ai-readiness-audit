@@ -29,23 +29,24 @@ This repo tracks two DIFFERENT things — keep them separate:
 
 **Statuses are a fixed vocabulary** — the agent only ever sets one of the listed values (this is the "dropdown" behavior; no free-typing statuses). No PII in any column — contact details live ONLY in the per-site dossier README.md, never here.
 
-## The automated flow
+## The automated flow — cloud agent writes the CSV directly
 
 ```
 Cloud agent (session end)
-  └─► Deliverables.zip: PROGRESS_update + site folders (+ worklog)
+  ├─► 1. Updates pipeline.csv IN PLACE (repo root):
+  │      existing rows preserved, operator-filled values preserved,
+  │      new/audited sites appended or updated (outreach_status = "Not Sent")
+  ├─► 2. Updates PROGRESS.md (dedup registry)
+  ├─► 3. git add -A && commit && push  (CSV + PROGRESS + site folders → GitHub backup)
+  └─► 4. Copies the updated pipeline.csv into Deliverables.zip root
         │
-Local AI agent (one command: "update the pipeline from <zip/folder>")
-  ├─► 1. Append PROGRESS_update rows → PROGRESS.md
-  ├─► 2. Append/merge matching rows → pipeline.csv  (stage: outreach_status = "Not Sent")
-  ├─► 3. git add -A && commit && push   (progress backed up on GitHub)
-  └─► 4. Sync pipeline.csv → Notion database (if Notion is set up, see below)
-        │
-You (zero typing — dropdowns only)
-  └─► Open Notion: drag cards on the kanban / click a status dropdown
-      OR tell the local agent: "mark exampleclinic.com as Replied-Interested"
-      OR ask: "which industry had the best response rate last month?"
+You (zero intermediate steps)
+  ├─► Take pipeline.csv from the zip → import/upload straight into Notion
+  └─► Later updates: click dropdowns in Notion, OR tell your local agent:
+      "mark exampleclinic.com as Replied-Interested" (it edits pipeline.csv + syncs Notion)
 ```
+
+The cloud agent NEVER recreates pipeline.csv — it opens the existing file (clone or repo copy), preserves every prior row and every value you filled (dates, statuses, deal values), and only adds/updates the rows for the sites it audited this session. Conflict rule: if a domain already has a row, the cloud agent fills ONLY the columns it owns (`audit_date, industry_group, business_type, ticket_tier, outreach_status=Not Sent, outcome=Open` when empty) and never overwrites your lifecycle entries.
 
 ## Weekly / monthly reports — just ask the local agent
 
