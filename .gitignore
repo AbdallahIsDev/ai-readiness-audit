@@ -14,10 +14,10 @@ AUDIT_EXECUTION_DIRECTIVE.md
 CLOUD_AGENT_WORKFLOW.md
 
 # CLIENT PII PROTECTION:
-# Every per-site business dossier is named README.md (emails, phones, owner
-# names, addresses live ONLY there). This blanket rule blocks every untracked
-# README.md anywhere — i.e., all site dossiers. The ROOT README.md of this repo
-# is already tracked, and gitignore never untracks tracked files, so it stays
-# on GitHub and keeps updating normally. Site folders themselves (audit files,
-# PDFs, Outreach, Evidence, data/) ARE pushed as progress backup.
-README.md
+# Every per-site business dossier is websites/<site>/README.md (emails, phones,
+# owner names, addresses live ONLY there). This scoped rule blocks exactly those
+# dossiers. The repo ROOT README.md and any skills/*/README.md stay tracked and
+# keep updating normally. Site folders' other artifacts (audit.md/pdf, Outreach,
+# Evidence, data/) ARE pushed as progress backup — ONLY after a PII scan passes
+# (raw data/*.json captures can still contain page-text phones — scrub before push).
+websites/*/README.md

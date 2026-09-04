@@ -28,9 +28,9 @@ The complete operating kit for running **AI-Agent Readiness Audits** on small lo
 
 ## Privacy model
 
-- The ONLY client-sensitive file is each site's `README.md` business dossier (emails, phones, owner names, addresses). A blanket `.gitignore` rule blocks every untracked `README.md`, so dossiers never reach GitHub — they are delivered only inside `Deliverables.zip`.
-- Everything else in the per-site folders (audit reports, PDFs, Outreach, Evidence, data/) IS committed and pushed to GitHub as durable progress backup. These files carry no raw contact PII by directive (§11 of the audit directive), and a mandatory PII scan verifies that before shipping.
-- This repo's own root `README.md` is tracked, so the blanket rule does not affect it — it keeps updating normally.
+- The ONLY client-sensitive file is each site's `websites/<site>/README.md` business dossier (emails, phones, owner names, addresses). A scoped `.gitignore` rule (`websites/*/README.md`) blocks exactly those dossiers, so they never reach GitHub — they are delivered only inside `Deliverables.zip`.
+- Everything else in the per-site folders (audit reports, PDFs, Outreach, Evidence, data/) IS committed and pushed to GitHub as durable progress backup — but ONLY after a PII scan passes. Raw `data/*.json` captures can still carry page-text phones/emails, so scrub/redact them first; `Outreach.md` carries no contact PII by directive.
+- This repo's own root `README.md` and `skills/*/README.md` files are outside the scoped rule, so they stay tracked and keep updating normally.
 - `PROGRESS.md` (dedup rows, no PII) is pushed alongside the site folders.
 
 ## Usage
