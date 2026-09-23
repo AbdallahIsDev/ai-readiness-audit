@@ -7,17 +7,23 @@ REAUDIT_QUEUE.md
 # Local skill installs - the shipped skills live in skills/ (committed)
 .agents/
 .commandcode/
+.workbuddy-ai/
 skills-lock.json
 
 # The directive & workflow stay LOCAL ONLY (per operator decision)
 AUDIT_EXECUTION_DIRECTIVE.md
 CLOUD_AGENT_WORKFLOW.md
 
-# CLIENT PII PROTECTION:
-# Every per-site business dossier is websites/<site>/README.md (emails, phones,
-# owner names, addresses live ONLY there). This scoped rule blocks exactly those
-# dossiers. The repo ROOT README.md and any skills/*/README.md stay tracked and
-# keep updating normally. Site folders' other artifacts (audit.md/pdf, Outreach,
-# Evidence, data/) ARE pushed as progress backup — ONLY after a PII scan passes
-# (raw data/*.json captures can still contain page-text phones — scrub before push).
+# CLIENT PII PROTECTION (both modes):
+# Every per-target business dossier is websites/<site-or-slug>/README.md (emails,
+# phones, social handles, owner names, addresses live ONLY there — §11/§11B).
+# This scoped rule blocks exactly those dossiers (with_website domain folders AND
+# no_website slug folders like websites/acme-plumbing-austin-tx/). The repo ROOT
+# README.md and any skills/*/README.md stay tracked and keep updating normally.
+# Target folders' other artifacts (audit.md/pdf in with_website mode; Outreach,
+# Evidence, data/ in both modes) ARE pushed as progress backup — ONLY after a PII
+# scan passes (raw data/*.json captures can still contain page-text phones —
+# scrub before push; in no_website mode Outreach channel-target handle line is
+# by design per §12B.2, but raw emails never leave the dossier).
 websites/*/README.md
+.workbuddy-ai/

@@ -27,7 +27,11 @@ This repo tracks two DIFFERENT things — keep them separate:
 | `followup_date` | YYYY-MM-DD — when to nudge next | You or local agent |
 | `notes` | short factual note (no PII) | any |
 
-**Statuses are a fixed vocabulary** — the agent only ever sets one of the listed values (this is the "dropdown" behavior; no free-typing statuses). No PII in any column — contact details live ONLY in the per-site dossier README.md, never here.
+**Statuses are a fixed vocabulary** — the agent only ever sets one of the listed values (this is the "dropdown" behavior; no free-typing statuses). No PII in any column — contact details live ONLY in the per-business dossier README.md, never here.
+
+## No-website rows (TARGET_MODE=no_website — schema reuse, no new columns)
+
+The same CSV carries both modes without breaking Notion views: `domain` holds either a bare domain (with_website, e.g. `exampleclinic.com`) or a `nowebsite:`-prefixed business key (no_website, e.g. `nowebsite:acme-plumbing-austin-tx` — normalized name + city). `notes` holds the mode-appropriate note (with_website: `N findings`; no_website: `no website, <rating/reviews>, <Channel>` — no PII). `business_type`, `ticket_tier`, `industry_group` keep their meanings (N0 qualification in no_website mode). Filter Notion by `domain` prefix to split the two pipelines; the cloud agent (directive §14/§14B) is the primary writer in both modes and never overwrites operator lifecycle columns.
 
 ## The automated flow — cloud agent writes the CSV directly
 

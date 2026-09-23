@@ -6,7 +6,7 @@ The complete operating kit for running **AI-Agent Readiness Audits** on small lo
 
 | Item | Purpose |
 |---|---|
-| `AUDIT_EXECUTION_DIRECTIVE.md` | The master directive. One copy-paste prompt that runs an entire audit session: target selection, qualification gates, sub-agent/wave architecture, 4-tier AI-visibility testing (fetch-first → browser → ChatGPT/Gemini live test → free tools), evidence gates, sales outreach protocol, packaging, and privacy rules. |
+| `AUDIT_EXECUTION_DIRECTIVE.md` | The master directive (v3 dual-mode). One copy-paste prompt that runs an entire session in ONE `TARGET_MODE`: `with_website` = full 11-check audit (AI-readiness as ONE bucket, outdated-site/redesign PRIMARY, fetch-first → browser → ChatGPT/Gemini live test → free tools, evidence gates, audit→redesign outreach) OR `no_website` = Maps/social discovery → verify-no-website → email/social-DM contact-hunt (PHONE BAN) → dossier + build outreach. Mode router (§0), discovery workflow (§3B), dossiers (§11/§11B), outreach (§12/§12B incl. §12.4R redesign close), ledger (§14/§14B), packaging (§15/§15B), done-gates (§16/§16B), reports (§17), hard limits (§18/§18B). |
 | `CLOUD_AGENT_WORKFLOW.md` | Reference for the execution environment: cloud-agent sandbox, sub-agents, and the wave system. |
 | `PROGRESS.md` | The dedup registry — every domain already audited, so future sessions never re-audit. No client PII, one row per site. |
 | `skills/` | Skills every auditor/copywriter sub-agent MUST read in full before working (IsAgentReady checkpoints, cold-email, AI-SEO, crawl4ai, website audit, markdown-to-PDF). |
@@ -36,8 +36,8 @@ The complete operating kit for running **AI-Agent Readiness Audits** on small lo
 ## Usage
 
 ```
-1. Edit NUMBER_OF_WEBSITES / TARGET_GROUP in AUDIT_EXECUTION_DIRECTIVE.md §0 Controls.
-2. Copy-paste the directive to the cloud agent.
-3. The agent clones this repo, audits, and returns Deliverables.zip.
+1. Edit §0 Controls: TARGET_MODE (with_website | no_website) + quantity (NUMBER_OF_WEBSITES or NUMBER_OF_NO_WEBSITE_BUSINESSES) + TARGET_GROUP + fees.
+2. Copy-paste the directive to the cloud agent (one mode per session, never mixed).
+3. The agent clones this repo, runs the mode's workflow (audit or discovery), and returns Deliverables.zip.
 4. Review the worklog.md in the zip to audit the agent's reasoning.
 ```
