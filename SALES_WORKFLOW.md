@@ -17,7 +17,8 @@
 | Stage                                                                 | Who                                                                       | Output                        |
 | --------------------------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------- |
 | Sourcing, no-website proof, contact hunt, dossier, outreach **draft** | Cloud agent (directive §3B, §11B, §12B)                                   | `websites/<slug>/Outreach.md` |
-| **The contact sheet — every target's emails, phones and DM deep links in one file** | **The cloud agent** (directive §3.5–§3.6 — runs in BOTH modes), read back and verified before the run continues | `OUTREACH_CONTACTS.md` (zip root) |
+| **The contact sheet — every target's emails, phones and DM deep links in one file** | **The cloud agent** (directive §3.6–§3.7 — runs in BOTH modes), read back and verified before the run continues | `OUTREACH_CONTACTS.md` (zip root) |
+| **Geographic targeting — high-income markets only** | **The cloud agent**, from the operator-set `TARGET_COUNTRIES` (directive §3.5 — runs in BOTH modes). Egypt and every other low / lower-middle / upper-middle-income economy are excluded at sourcing, before any audit or contact-hunt work is spent | A candidate pool of sellable leads |
 | **Sending, replying, booking, meeting, closing, delivering**          | **You (this file)**                                                       | Money                         |
 | One-page demo build                                                   | **The cloud agent** when `GENERATE_LANDING_PAGE: ON` (directive §3C, unit N5) — otherwise you, from a per-trade template. Either way, **you deploy it.** | `demo.<yourdomain>/<slug>`    |
 
@@ -451,6 +452,17 @@ The problem: **you are ~7 hours ahead of US Eastern time.** Their ideal 4pm is y
 **Time-zone mechanics:** Egypt is UTC+3 in summer and UTC+2 in winter; US Eastern is UTC−4/UTC−5. That's **7 hours for most of the year**, dropping to 6 during the brief late-October/early-November window when Egypt has left daylight saving and the US hasn't. Let the booking tool handle it — but confirm the slot in *their* timezone in every message, never yours.
 
 **Other US timezones:** Central is 1 hour behind Eastern, Mountain 2, Pacific 3. A Pacific prospect's 11am is your 9pm. **Prefer Eastern and Central time zones when sourcing.** This is worth feeding back into the directive's §3B sourcing — a West Coast prospect costs you an hour of your evening for the same $1,200.
+
+**Once `TARGET_COUNTRIES` is widened past the US (§3.5), the table above stops covering you.** The directive now sources only from high-income markets, and your allow-list may include GB/IE, AU/NZ, SG, or the Gulf/EU Tier-2 set — each with its own offset from Cairo (UTC+3 in summer, UTC+2 in winter). The principle is unchanged everywhere — *find their mid-morning-to-early-afternoon band and price what it costs you in the evening* — but the arithmetic is not:
+
+| Market | Offset from Cairo | What it means for you |
+|---|---|---|
+| **GB / IE** | **~2 hours behind** | A 4pm London call is your 6pm. **The ET problem largely disappears — the single easiest non-US market to run.** |
+| **Gulf (AE / QA / SA)** | **≈ your own clock** (Dubai +1; Riyadh/Doha same) | Their business day *is* your business day. Trivially easy on time — but cold English outreach converts worse there than in an English-first market. |
+| **Singapore** | 5–6 hours ahead | Their afternoon is your late afternoon/evening. Workable. |
+| **AU / NZ** | **7–9 hours ahead** (Sydney; NZ up to ~11) | Their business hours land in your **early morning** — it inverts the problem rather than solving it. Only worth it if the market pays enough to justify the alarm clock. |
+
+Among equally-payable markets, prefer the ones whose working day overlaps your evening — that ordering, not convenience, is what §3.5 is for: **every market on the list can pay; they are not equally pleasant to sell into.**
 
 ### 4.3 The booking ask
 
@@ -946,7 +958,7 @@ The operator added `GENERATE_LANDING_PAGE: ON/OFF` (§0 Controls) and a full **�
 **Cost note (honest):** a per-business design system is *more* work per business than one shared house style would be — that is the price of each demo looking bespoke rather than re-skinned. Same-trade businesses will converge on similar systems, but each is authored and recorded separately.
 
 **✅ A7 — the session contact sheet (operator-requested, 2026-09-24).**
-The operator asked for full business-info collection in **both** modes, and for a single per-session file holding every target's reachable channels as clickable links. Applied as directive **§3.5** (the contact-hunt is now a **fixed policy in both `with_website` and `no_website`** — every email, every phone, every DM-able social, not just what the site shows) and **§3.6** (`OUTREACH_CONTACTS.md`, the click-to-contact sheet at the zip root, with verified per-platform DM deep links). The agent must **read the sheet back and verify it** (§3.6.3) before the run continues.
+The operator asked for full business-info collection in **both** modes, and for a single per-session file holding every target's reachable channels as clickable links. Applied as directive **§3.6** (the contact-hunt is now a **fixed policy in both `with_website` and `no_website`** — every email, every phone, every DM-able social, not just what the site shows) and **§3.7** (`OUTREACH_CONTACTS.md`, the click-to-contact sheet at the zip root, with verified per-platform DM deep links). The agent must **read the sheet back and verify it** (§3.7.3) before the run continues.
 **Consequence for this file:** §0.1 and §2.1 now point at the sheet as the starting point for every outreach session — **the sheet is the route, `Outreach.md` is the message.** Privacy also changed: the sheet is the **second PII file** after the per-business dossiers, zip-only and never pushed.
 
 ### NOT APPLIED — still open
