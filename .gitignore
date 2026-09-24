@@ -26,4 +26,19 @@ CLOUD_AGENT_WORKFLOW.md
 # scrub before push; in no_website mode Outreach channel-target handle line is
 # by design per §12B.2, but raw emails never leave the dossier).
 websites/*/README.md
+
+# GENERATED LANDING PAGES + THEIR DESIGN SYSTEMS — zip-only, never public
+# (directive §3C, §14B.3, §15B). A demo page carries the business's own contact
+# details and is an UNSOLICITED build shown to a prospect who has not agreed to
+# anything; demo/design-system.md is authored for that same business (§3C.2, step
+# N5a). Publishing either would expose the client's details and the studio's pitch
+# before delivery. Both are delivered in Deliverables.zip only.
+websites/*/demo/
+
+# SESSION CONTACT SHEET — zip-only, never public (directive §3.6, §14B.3, §15B).
+# OUTREACH_CONTACTS.md aggregates raw contact PII (emails, phones, social handles)
+# for EVERY business in the session — the second designated sensitive file, after the
+# per-business dossiers. Delivered in Deliverables.zip only.
+OUTREACH_CONTACTS.md
+
 .workbuddy-ai/
